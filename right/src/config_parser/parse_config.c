@@ -10,8 +10,13 @@
 #include "config.h"
 #include "mouse_controller.h"
 
-static parser_error_t parseModuleConfiguration(config_buffer_t *buffer, bool applyConfig)
+static parser_error_t parseModuleConfiguration(config_buffer_t *buffer, bool applyConfig, uint16_t majorVersion)
 {
+    uint16_t maxOffset = 0;
+    if (CONFIG_HAS_SIZE(majorVersion)) {
+        uint16_t length = ReadCompactLength(buffer);
+        maxOffset = length + buffer->offset;
+    }
     uint8_t id = ReadUInt8(buffer);
     uint8_t pointerMode = ReadUInt8(buffer);  // move vs scroll
     uint8_t deceleratedPointerSpeedMultiplier = ReadUInt8(buffer);
@@ -21,6 +26,16 @@ static parser_error_t parseModuleConfiguration(config_buffer_t *buffer, bool app
     uint8_t modLayerPointerFunction = ReadUInt8(buffer);  // none vs invertMode vs decelerate vs accelerate
     uint8_t fnLayerPointerFunction = ReadUInt8(buffer);  // none vs invertMode vs decelerate vs accelerate
     uint8_t mouseLayerPointerFunction = ReadUInt8(buffer);  // none vs invertMode vs decelerate vs accelerate
+
+    // New fields go here
+    /*
+    if (buffer->offset < maxOffset {
+        //Read field
+    }
+    */
+    if (maxOffset) {
+        buffer->offset = maxOffset;
+    }
 
     (void)id;
     (void)pointerMode;
@@ -99,7 +114,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig)
     }
 
     for (uint8_t moduleConfigurationIdx = 0; moduleConfigurationIdx < moduleConfigurationCount; moduleConfigurationIdx++) {
-        errorCode = parseModuleConfiguration(buffer, applyConfig);
+        errorCode = parseModuleConfiguration(buffer, applyConfig, dataModelMajorVersion);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
@@ -133,6 +148,14 @@ parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig)
         }
     }
 
+    // New fields go here
+    /*
+    if (buffer->offset < userConfigLength {
+        //Read field
+    }
+    */
+
+    buffer->offset = userConfigLength;
     // If parsing succeeded then apply the parsed values.
 
     if (applyConfig) {

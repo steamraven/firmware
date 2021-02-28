@@ -5,6 +5,10 @@
 
     #include "basic_types.h"
 
+// Macros:
+    #define VERSION_WITH_SIZE 5
+    #define CONFIG_HAS_SIZE(version) (version>=VERSION_WITH_SIZE)
+
 // Typedefs:
 
     typedef enum {
