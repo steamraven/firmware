@@ -95,6 +95,8 @@ parser_error_t ParseMacroAction(config_buffer_t *buffer, macro_action_t *macroAc
 {
     uint8_t macroActionType = ReadUInt8(buffer);
 
+    // MacroActions can be extended by creating new MacroActionTypes
+
     switch (macroActionType) {
         case SerializedMacroActionType_KeyMacroAction ... SerializedMacroActionType_LastKeyMacroAction:
             return parseKeyMacroAction(buffer, macroAction, macroActionType);
@@ -112,13 +114,19 @@ parser_error_t ParseMacroAction(config_buffer_t *buffer, macro_action_t *macroAc
     return ParserError_InvalidSerializedMacroActionType;
 }
 
-parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx, bool applyConfig)
+parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx, bool applyConfig, uint16_t majorVersion)
 {
     parser_error_t errorCode;
     uint16_t nameLen;
+    uint16_t maxOffset = 0;
+    if (CONFIG_HAS_SIZE(majorVersion)) {
+        uint16_t length = ReadCompactLength(buffer);
+        maxOffset = length + buffer->offset;
+    }
     bool isLooped = ReadBool(buffer);
     bool isPrivate = ReadBool(buffer);
     const char *name = ReadString(buffer, &nameLen);
+
     uint16_t macroActionsCount = ReadCompactLength(buffer);
     uint16_t firstMacroActionOffset = buffer->offset;
 
@@ -133,6 +141,17 @@ parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx, bool applyC
     (void)isLooped;
     (void)isPrivate;
     (void)name;
+
+    // New fields go here
+    /*
+    if (buffer->offset < maxOffset {
+        //Read field
+    }
+    */
+    if (maxOffset) {
+        buffer->offset = maxOffset;
+    }
+
     if (applyConfig) {
         AllMacros[macroIdx].firstMacroActionOffset = firstMacroActionOffset;
         AllMacros[macroIdx].endMacroActionOffset = endMacroActionOffset;

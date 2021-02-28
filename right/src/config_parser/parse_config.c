@@ -128,7 +128,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig)
     }
 
     for (uint8_t macroIdx = 0; macroIdx < macroCount; macroIdx++) {
-        errorCode = ParseMacro(buffer, macroIdx, applyConfig);
+        errorCode = ParseMacro(buffer, macroIdx, applyConfig, dataModelMajorVersion);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
