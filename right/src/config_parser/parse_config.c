@@ -1,6 +1,7 @@
 #include "parse_config.h"
 #include "parse_keymap.h"
 #include "parse_macro.h"
+#include "parse_extensions.h"
 #include "keymap.h"
 #include "config_globals.h"
 #include "macros.h"
@@ -143,6 +144,13 @@ parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig)
 
     for (uint8_t keymapIdx = 0; keymapIdx < keymapCount; keymapIdx++) {
         errorCode = ParseKeymap(buffer, keymapIdx, keymapCount, macroCount, applyConfig, dataModelMajorVersion);
+        if (errorCode != ParserError_Success) {
+            return errorCode;
+        }
+    }
+
+    if (buffer->offset < userConfigLength) {
+        errorCode = ParseExtensions(buffer, applyConfig);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
