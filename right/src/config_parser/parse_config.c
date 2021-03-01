@@ -142,7 +142,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig)
     }
 
     for (uint8_t keymapIdx = 0; keymapIdx < keymapCount; keymapIdx++) {
-        errorCode = ParseKeymap(buffer, keymapIdx, keymapCount, macroCount, applyConfig);
+        errorCode = ParseKeymap(buffer, keymapIdx, keymapCount, macroCount, applyConfig, dataModelMajorVersion);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }

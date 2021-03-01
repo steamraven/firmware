@@ -112,6 +112,8 @@ static parser_error_t parseKeyAction(config_buffer_t *buffer, key_action_t *keyA
 {
     uint8_t keyActionType = ReadUInt8(buffer);
 
+    // keyActions can be extended by creating new keyActionTypes
+
     switch (keyActionType) {
         case SerializedKeyActionType_None:
             return parseNoneAction( buffer, keyAction);
@@ -192,12 +194,17 @@ parser_error_t ParseKeymapLayers(config_buffer_t *buffer, keymap_t keymap, uint8
     return ParserError_Success;
 }
 
-parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount, bool applyConfig)
+parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount, bool applyConfig, uint16_t majorVersion)
 {
     parser_error_t errorCode;
     uint16_t abbreviationLen;
     uint16_t nameLen;
     uint16_t descriptionLen;
+    uint16_t maxOffset = 0;
+    if (CONFIG_HAS_SIZE(majorVersion)) {
+        uint16_t length = ReadCompactLength(buffer);
+        maxOffset = length + buffer->offset;
+    }
     const char *abbreviation = ReadString(buffer, &abbreviationLen);
     bool isDefault = ReadBool(buffer);
     const char *name = ReadString(buffer, &nameLen);
@@ -216,6 +223,17 @@ parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t k
     if (errorCode != ParserError_Success) {
         return errorCode;
     }
+
+    // New fields go here
+    /*
+    if (buffer->offset < maxOffset {
+        //Read field
+    }
+    */
+    if (maxOffset) {
+        buffer->offset = maxOffset;
+    }
+
     if (applyConfig) {
         AllKeymaps[keymapIdx].abbreviation = abbreviation;
         AllKeymaps[keymapIdx].abbreviationLen = abbreviationLen;
