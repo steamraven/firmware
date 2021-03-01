@@ -23,7 +23,7 @@ void SwitchKeymapById(uint8_t index)
 {
     CurrentKeymapIndex = index;
     ValidatedUserConfigBuffer.offset = AllKeymaps[index].offset;
-    ParseKeymap(&ValidatedUserConfigBuffer, index, AllKeymapsCount, AllMacrosCount);
+    ParseKeymapLayers(&ValidatedUserConfigBuffer, CurrentKeymap, AllKeymapsCount, AllMacrosCount);
     LedDisplay_UpdateText();
     UpdateLayerLeds();
 }
@@ -41,7 +41,7 @@ bool SwitchKeymapByAbbreviation(uint8_t length, char *abbrev)
 }
 
 // The factory keymap is initialized before it gets overwritten by the default keymap of the EEPROM.
-key_action_t CurrentKeymap[LayerId_Count][SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE] = {
+keymap_t CurrentKeymap = {
     // Base layer
     {
         // Right keyboard half

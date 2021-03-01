@@ -8,7 +8,6 @@
     #include "lufa/HIDClassCommon.h"
     #include "usb_composite_device.h"
     #include "module.h"
-    #include "config_parser/parse_keymap.h"
 
 // Typedefs:
 
@@ -53,7 +52,7 @@
                 uint8_t modifiers;
                 uint16_t scancode;
             } ATTR_PACKED keystroke;
-            serialized_mouse_action_t mouseAction;
+            uint8_t mouseAction;
             struct {
                 switch_layer_mode_t mode;
                 uint8_t layer;

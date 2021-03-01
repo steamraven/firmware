@@ -1,6 +1,7 @@
 #include "parse_macro.h"
 #include "config_globals.h"
 #include "macros.h"
+#include "parse_keymap.h"
 
 parser_error_t parseKeyMacroAction(config_buffer_t *buffer, macro_action_t *macroAction, serialized_macro_action_type_t macroActionType)
 {

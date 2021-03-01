@@ -4,6 +4,9 @@
 // Includes:
 
     #include <stdint.h>
+    #include "module.h"
+    #include "layer.h"
+    #include "slot.h"
     #include "key_action.h"
 
 // Macros:
@@ -19,13 +22,15 @@
         uint8_t abbreviationLen;
     } keymap_reference_t;
 
+    typedef key_action_t keymap_t[LayerId_Count][SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE];
+
 // Variables:
 
     extern keymap_reference_t AllKeymaps[MAX_KEYMAP_NUM];
     extern uint8_t AllKeymapsCount;
     extern uint8_t DefaultKeymapIndex;
     extern uint8_t CurrentKeymapIndex;
-    extern key_action_t CurrentKeymap[LayerId_Count][SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE];
+    extern keymap_t CurrentKeymap;
 
 // Functions:
 

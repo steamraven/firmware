@@ -5,82 +5,94 @@
 #include "keymap.h"
 #include "led_display.h"
 
-static uint8_t tempKeymapCount;
-static uint8_t tempMacroCount;
-
-static parser_error_t parseNoneAction(key_action_t *keyAction, config_buffer_t *buffer)
+static parser_error_t parseNoneAction(config_buffer_t *buffer, key_action_t *keyAction)
 {
     keyAction->type = KeyActionType_None;
     return ParserError_Success;
 }
 
-static parser_error_t parseKeyStrokeAction(key_action_t *keyAction, uint8_t keyStrokeAction, config_buffer_t *buffer)
+static parser_error_t parseKeyStrokeAction(config_buffer_t *buffer, key_action_t *keyAction, uint8_t keyStrokeAction)
 {
-    uint8_t keystrokeType = (SERIALIZED_KEYSTROKE_TYPE_MASK_KEYSTROKE_TYPE & keyStrokeAction) >> SERIALIZED_KEYSTROKE_TYPE_OFFSET_KEYSTROKE_TYPE;
+    uint8_t serialKeystrokeType = (SERIALIZED_KEYSTROKE_TYPE_MASK_KEYSTROKE_TYPE & keyStrokeAction) >> SERIALIZED_KEYSTROKE_TYPE_OFFSET_KEYSTROKE_TYPE;
+    uint16_t scancode = keyStrokeAction & SERIALIZED_KEYSTROKE_TYPE_MASK_HAS_SCANCODE
+        ? serialKeystrokeType == SerializedKeystrokeType_LongMedia ? ReadUInt16(buffer) : ReadUInt8(buffer)
+        : 0;
 
-    keyAction->type = KeyActionType_Keystroke;
-    switch (keystrokeType) {
+    uint8_t modifiers = keyStrokeAction & SERIALIZED_KEYSTROKE_TYPE_MASK_HAS_MODIFIERS
+        ? ReadUInt8(buffer)
+        : 0;
+
+    uint8_t secondaryRole = keyStrokeAction & SERIALIZED_KEYSTROKE_TYPE_MASK_HAS_LONGPRESS
+        ? ReadUInt8(buffer) + 1
+        : 0;
+    
+    keystroke_type_t keystrokeType;
+    switch (serialKeystrokeType) {
         case SerializedKeystrokeType_Basic:
-            keyAction->keystroke.keystrokeType = KeystrokeType_Basic;
+            keystrokeType = KeystrokeType_Basic;
             break;
         case SerializedKeystrokeType_ShortMedia:
         case SerializedKeystrokeType_LongMedia:
-            keyAction->keystroke.keystrokeType = KeystrokeType_Media;
+            keystrokeType = KeystrokeType_Media;
             break;
         case SerializedKeystrokeType_System:
-            keyAction->keystroke.keystrokeType = KeystrokeType_System;
+            keystrokeType = KeystrokeType_System;
             break;
         default:
             return ParserError_InvalidSerializedKeystrokeType;
     }
-    keyAction->keystroke.scancode = keyStrokeAction & SERIALIZED_KEYSTROKE_TYPE_MASK_HAS_SCANCODE
-        ? keystrokeType == SerializedKeystrokeType_LongMedia ? ReadUInt16(buffer) : ReadUInt8(buffer)
-        : 0;
-    keyAction->keystroke.modifiers = keyStrokeAction & SERIALIZED_KEYSTROKE_TYPE_MASK_HAS_MODIFIERS
-        ? ReadUInt8(buffer)
-        : 0;
-    keyAction->keystroke.secondaryRole = keyStrokeAction & SERIALIZED_KEYSTROKE_TYPE_MASK_HAS_LONGPRESS
-        ? ReadUInt8(buffer) + 1
-        : 0;
+    if (keyAction != NULL) {
+        keyAction->type = KeyActionType_Keystroke;
+        keyAction->keystroke.keystrokeType = keystrokeType;
+        keyAction->keystroke.scancode = scancode;
+        keyAction->keystroke.modifiers = modifiers;
+        keyAction->keystroke.secondaryRole = secondaryRole;
+    }
     return ParserError_Success;
 }
 
-static parser_error_t parseSwitchLayerAction(key_action_t *KeyAction, config_buffer_t *buffer)
+static parser_error_t parseSwitchLayerAction(config_buffer_t *buffer, key_action_t *keyAction)
 {
     uint8_t layer = ReadUInt8(buffer) + 1;
     switch_layer_mode_t mode = ReadUInt8(buffer);
 
-    KeyAction->type = KeyActionType_SwitchLayer;
-    KeyAction->switchLayer.layer = layer;
-    KeyAction->switchLayer.mode = mode;
+    if (keyAction != NULL) {
+        keyAction->type = KeyActionType_SwitchLayer;
+        keyAction->switchLayer.layer = layer;
+        keyAction->switchLayer.mode = mode;
+    }
     return ParserError_Success;
 }
 
-static parser_error_t parseSwitchKeymapAction(key_action_t *keyAction, config_buffer_t *buffer)
+static parser_error_t parseSwitchKeymapAction(config_buffer_t *buffer, key_action_t *keyAction, uint8_t keymapCount)
 {
     uint8_t keymapIndex = ReadUInt8(buffer);
 
-    if (keymapIndex >= tempKeymapCount) {
+    if (keymapIndex >= keymapCount) {
         return ParserError_InvalidSerializedSwitchKeymapAction;
     }
-    keyAction->type = KeyActionType_SwitchKeymap;
-    keyAction->switchKeymap.keymapId = keymapIndex;
+    if (keyAction != NULL) {
+        keyAction->type = KeyActionType_SwitchKeymap;
+        keyAction->switchKeymap.keymapId = keymapIndex;
+    }
     return ParserError_Success;
 }
 
-static parser_error_t parsePlayMacroAction(key_action_t *keyAction, config_buffer_t *buffer)
+static parser_error_t parsePlayMacroAction(config_buffer_t *buffer, key_action_t *keyAction, uint8_t macroCount)
 {
     uint8_t macroIndex = ReadUInt8(buffer);
 
-    if (macroIndex >= tempMacroCount) {
+    if (macroIndex >= macroCount) {
         return ParserError_InvalidSerializedPlayMacroAction;
     }
-    keyAction->type = KeyActionType_PlayMacro;
-    keyAction->playMacro.macroId = macroIndex;
+    if (keyAction != NULL) {
+        keyAction->type = KeyActionType_PlayMacro;
+        keyAction->playMacro.macroId = macroIndex;
+    }
     return ParserError_Success;
 }
 
-static parser_error_t parseMouseAction(key_action_t *keyAction, config_buffer_t *buffer)
+static parser_error_t parseMouseAction(config_buffer_t *buffer, key_action_t *keyAction)
 {
     keyAction->type = KeyActionType_Mouse;
 
@@ -88,47 +100,45 @@ static parser_error_t parseMouseAction(key_action_t *keyAction, config_buffer_t 
     if (mouseAction > SerializedMouseAction_Last) {
         return ParserError_InvalidSerializedMouseAction;
     }
-
-    memset(&keyAction->mouseAction, 0, sizeof keyAction->mouseAction);
-    keyAction->mouseAction = mouseAction;
+    if (keyAction != NULL) {
+        memset(&keyAction->mouseAction, 0, sizeof keyAction->mouseAction);
+        keyAction->mouseAction = mouseAction;
+    }
 
     return ParserError_Success;
 }
 
-static parser_error_t parseKeyAction(key_action_t *keyAction, config_buffer_t *buffer)
+static parser_error_t parseKeyAction(config_buffer_t *buffer, key_action_t *keyAction, uint8_t keymapCount, uint8_t macroCount)
 {
     uint8_t keyActionType = ReadUInt8(buffer);
 
     switch (keyActionType) {
         case SerializedKeyActionType_None:
-            return parseNoneAction(keyAction, buffer);
+            return parseNoneAction( buffer, keyAction);
         case SerializedKeyActionType_KeyStroke ... SerializedKeyActionType_LastKeyStroke:
-            return parseKeyStrokeAction(keyAction, keyActionType, buffer);
+            return parseKeyStrokeAction(buffer, keyAction, keyActionType);
         case SerializedKeyActionType_SwitchLayer:
-            return parseSwitchLayerAction(keyAction, buffer);
+            return parseSwitchLayerAction(buffer, keyAction);
         case SerializedKeyActionType_SwitchKeymap:
-            return parseSwitchKeymapAction(keyAction, buffer);
+            return parseSwitchKeymapAction(buffer, keyAction, keymapCount);
         case SerializedKeyActionType_Mouse:
-            return parseMouseAction(keyAction, buffer);
+            return parseMouseAction(buffer, keyAction);
         case SerializedKeyActionType_PlayMacro:
-            return parsePlayMacroAction(keyAction, buffer);
+            return parsePlayMacroAction(buffer, keyAction, macroCount);
     }
     return ParserError_InvalidSerializedKeyActionType;
 }
 
-static parser_error_t parseKeyActions(uint8_t targetLayer, config_buffer_t *buffer, uint8_t moduleId)
+static parser_error_t parseKeyActions(config_buffer_t *buffer, key_action_t keymap[MAX_KEY_COUNT_PER_MODULE], uint8_t keymapCount, uint8_t macroCount)
 {
     parser_error_t errorCode;
     uint16_t actionCount = ReadCompactLength(buffer);
-    key_action_t dummyKeyAction;
 
     if (actionCount > MAX_KEY_COUNT_PER_MODULE) {
         return ParserError_InvalidActionCount;
     }
-    bool parserRunDry = IsModuleAttached(moduleId) ? ParserRunDry : true;
-    slot_t slotId = ModuleIdToSlotId(moduleId);
     for (uint8_t actionIdx = 0; actionIdx < actionCount; actionIdx++) {
-        errorCode = parseKeyAction(parserRunDry ? &dummyKeyAction : &CurrentKeymap[targetLayer][slotId][actionIdx], buffer);
+        errorCode = parseKeyAction(buffer, keymap == NULL ? NULL : &keymap[actionIdx],keymapCount, macroCount);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
@@ -136,13 +146,20 @@ static parser_error_t parseKeyActions(uint8_t targetLayer, config_buffer_t *buff
     return ParserError_Success;
 }
 
-static parser_error_t parseModule(config_buffer_t *buffer, uint8_t layer)
+static parser_error_t parseModule(config_buffer_t *buffer, key_action_t keymap[SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE], uint8_t keymapCount, uint8_t macroCount)
 {
     uint8_t moduleId = ReadUInt8(buffer);
-    return parseKeyActions(layer, buffer, moduleId);
+    if (!IsModuleAttached(moduleId)) {
+        keymap = NULL;
+    }
+    slot_t slotId = ModuleIdToSlotId(moduleId);
+    if (slotId > SLOT_COUNT) {
+        return ParserError_InvalidModuleCount;
+    }
+    return parseKeyActions(buffer, keymap == NULL ? NULL : keymap[slotId], keymapCount, macroCount);
 }
 
-static parser_error_t parseLayer(config_buffer_t *buffer, uint8_t layer)
+static parser_error_t parseLayer(config_buffer_t *buffer, key_action_t keymap[SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE], uint8_t keymapCount, uint8_t macroCount )
 {
     parser_error_t errorCode;
     uint16_t moduleCount = ReadCompactLength(buffer);
@@ -151,7 +168,23 @@ static parser_error_t parseLayer(config_buffer_t *buffer, uint8_t layer)
         return ParserError_InvalidModuleCount;
     }
     for (uint8_t moduleIdx = 0; moduleIdx < moduleCount; moduleIdx++) {
-        errorCode = parseModule(buffer, layer);
+        errorCode = parseModule(buffer, keymap, keymapCount, macroCount);
+        if (errorCode != ParserError_Success) {
+            return errorCode;
+        }
+    }
+    return ParserError_Success;
+}
+
+parser_error_t ParseKeymapLayers(config_buffer_t *buffer, keymap_t keymap, uint8_t keymapCount, uint8_t macroCount)
+{
+    uint16_t layerCount = ReadCompactLength(buffer);
+
+    if (layerCount != LayerId_Count) {
+        return ParserError_InvalidLayerCount;
+    }
+    for (uint8_t layerIdx = 0; layerIdx < layerCount; layerIdx++) {
+        parser_error_t errorCode = parseLayer(buffer, keymap == NULL ? NULL : keymap[layerIdx], keymapCount, macroCount);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
@@ -161,7 +194,6 @@ static parser_error_t parseLayer(config_buffer_t *buffer, uint8_t layer)
 
 parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount)
 {
-    uint16_t offset = buffer->offset;
     parser_error_t errorCode;
     uint16_t abbreviationLen;
     uint16_t nameLen;
@@ -170,30 +202,24 @@ parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t k
     bool isDefault = ReadBool(buffer);
     const char *name = ReadString(buffer, &nameLen);
     const char *description = ReadString(buffer, &descriptionLen);
-    uint16_t layerCount = ReadCompactLength(buffer);
 
     (void)name;
     (void)description;
     if (!abbreviationLen || abbreviationLen > 3) {
         return ParserError_InvalidAbbreviationLen;
     }
-    if (layerCount != LayerId_Count) {
-        return ParserError_InvalidLayerCount;
+
+    uint16_t layersStartOffset = buffer->offset;
+    errorCode = ParseKeymapLayers(buffer, ParserRunDry ? NULL: CurrentKeymap, keymapCount, macroCount);
+    if (errorCode != ParserError_Success) {
+        return errorCode;
     }
     if (!ParserRunDry) {
         AllKeymaps[keymapIdx].abbreviation = abbreviation;
         AllKeymaps[keymapIdx].abbreviationLen = abbreviationLen;
-        AllKeymaps[keymapIdx].offset = offset;
+        AllKeymaps[keymapIdx].offset = layersStartOffset;
         if (isDefault) {
             DefaultKeymapIndex = keymapIdx;
-        }
-    }
-    tempKeymapCount = keymapCount;
-    tempMacroCount = macroCount;
-    for (uint8_t layerIdx = 0; layerIdx < layerCount; layerIdx++) {
-        errorCode = parseLayer(buffer, layerIdx);
-        if (errorCode != ParserError_Success) {
-            return errorCode;
         }
     }
     return ParserError_Success;
