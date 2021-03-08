@@ -10,7 +10,7 @@
 #include "config.h"
 #include "mouse_controller.h"
 
-static parser_error_t parseModuleConfiguration(config_buffer_t *buffer)
+static parser_error_t parseModuleConfiguration(config_buffer_t *buffer, bool applyConfig)
 {
     uint8_t id = ReadUInt8(buffer);
     uint8_t pointerMode = ReadUInt8(buffer);  // move vs scroll
@@ -35,7 +35,7 @@ static parser_error_t parseModuleConfiguration(config_buffer_t *buffer)
     return ParserError_Success;
 }
 
-parser_error_t ParseConfig(config_buffer_t *buffer)
+parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig)
 {
     // Miscellaneous properties
 
@@ -99,7 +99,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer)
     }
 
     for (uint8_t moduleConfigurationIdx = 0; moduleConfigurationIdx < moduleConfigurationCount; moduleConfigurationIdx++) {
-        errorCode = parseModuleConfiguration(buffer);
+        errorCode = parseModuleConfiguration(buffer, applyConfig);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
@@ -113,7 +113,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer)
     }
 
     for (uint8_t macroIdx = 0; macroIdx < macroCount; macroIdx++) {
-        errorCode = ParseMacro(buffer, macroIdx);
+        errorCode = ParseMacro(buffer, macroIdx, applyConfig);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
@@ -127,7 +127,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer)
     }
 
     for (uint8_t keymapIdx = 0; keymapIdx < keymapCount; keymapIdx++) {
-        errorCode = ParseKeymap(buffer, keymapIdx, keymapCount, macroCount);
+        errorCode = ParseKeymap(buffer, keymapIdx, keymapCount, macroCount, applyConfig);
         if (errorCode != ParserError_Success) {
             return errorCode;
         }
@@ -135,7 +135,7 @@ parser_error_t ParseConfig(config_buffer_t *buffer)
 
     // If parsing succeeded then apply the parsed values.
 
-    if (!ParserRunDry) {
+    if (applyConfig) {
 //        DoubleTapSwitchLayerTimeout = doubleTapSwitchLayerTimeout;
 
         // Update LED brightnesses and reinitialize LED drivers

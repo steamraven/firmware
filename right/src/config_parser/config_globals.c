@@ -13,8 +13,6 @@ config_buffer_t ValidatedUserConfigBuffer = { validatedUserConfig };
 
 hardware_config_t *HardwareConfig = (hardware_config_t*)hardwareConfig;
 
-bool ParserRunDry;
-
 bool IsConfigBufferIdValid(config_buffer_id_t configBufferId)
 {
     return ConfigBufferId_HardwareConfig <= configBufferId && configBufferId <= ConfigBufferId_ValidatedUserConfig;

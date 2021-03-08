@@ -112,7 +112,7 @@ parser_error_t ParseMacroAction(config_buffer_t *buffer, macro_action_t *macroAc
     return ParserError_InvalidSerializedMacroActionType;
 }
 
-parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx)
+parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx, bool applyConfig)
 {
     parser_error_t errorCode;
     uint16_t nameLen;
@@ -133,7 +133,7 @@ parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx)
     (void)isLooped;
     (void)isPrivate;
     (void)name;
-    if (!ParserRunDry) {
+    if (applyConfig) {
         AllMacros[macroIdx].firstMacroActionOffset = firstMacroActionOffset;
         AllMacros[macroIdx].endMacroActionOffset = endMacroActionOffset;
     }

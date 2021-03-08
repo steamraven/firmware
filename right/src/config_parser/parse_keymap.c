@@ -192,7 +192,7 @@ parser_error_t ParseKeymapLayers(config_buffer_t *buffer, keymap_t keymap, uint8
     return ParserError_Success;
 }
 
-parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount)
+parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount, bool applyConfig)
 {
     parser_error_t errorCode;
     uint16_t abbreviationLen;
@@ -210,11 +210,13 @@ parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t k
     }
 
     uint16_t layersStartOffset = buffer->offset;
-    errorCode = ParseKeymapLayers(buffer, ParserRunDry ? NULL: CurrentKeymap, keymapCount, macroCount);
+    // Parse layers for errors, but do not apply.  
+    // Keymaps are reparsed applied with SwitchKeymap*
+    errorCode = ParseKeymapLayers(buffer, NULL, keymapCount, macroCount);
     if (errorCode != ParserError_Success) {
         return errorCode;
     }
-    if (!ParserRunDry) {
+    if (applyConfig) {
         AllKeymaps[keymapIdx].abbreviation = abbreviation;
         AllKeymaps[keymapIdx].abbreviationLen = abbreviationLen;
         AllKeymaps[keymapIdx].offset = layersStartOffset;

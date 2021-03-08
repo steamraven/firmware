@@ -16,9 +16,8 @@ void UsbCommand_ApplyConfig(void)
 {
     // Validate the staging configuration.
 
-    ParserRunDry = true;
     StagingUserConfigBuffer.offset = 0;
-    uint8_t parseConfigStatus = ParseConfig(&StagingUserConfigBuffer);
+    uint8_t parseConfigStatus = ParseConfig(&StagingUserConfigBuffer, false);
     updateUsbBuffer(parseConfigStatus, StagingUserConfigBuffer.offset, ParsingStage_Validate);
 
     if (parseConfigStatus != UsbStatusCode_Success) {
@@ -40,9 +39,8 @@ void UsbCommand_ApplyConfig(void)
         return;
     }
 
-    ParserRunDry = false;
     ValidatedUserConfigBuffer.offset = 0;
-    parseConfigStatus = ParseConfig(&ValidatedUserConfigBuffer);
+    parseConfigStatus = ParseConfig(&ValidatedUserConfigBuffer, true);
     updateUsbBuffer(parseConfigStatus, ValidatedUserConfigBuffer.offset, ParsingStage_Apply);
 
     if (parseConfigStatus != UsbStatusCode_Success) {

@@ -27,6 +27,6 @@
 
 // Functions:
 
-    parser_error_t ParseConfig(config_buffer_t *buffer);
+    parser_error_t ParseConfig(config_buffer_t *buffer, bool applyConfig);
 
 #endif

@@ -58,7 +58,8 @@
     } serialized_mouse_action_t;
 
 // Functions:
+
     parser_error_t ParseKeymapLayers(config_buffer_t *buffer, keymap_t keymap, uint8_t keymapCount, uint8_t macroCount);
-    parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount);
+    parser_error_t ParseKeymap(config_buffer_t *buffer, uint8_t keymapIdx, uint8_t keymapCount, uint8_t macroCount, bool applyConfig);
 
 #endif
