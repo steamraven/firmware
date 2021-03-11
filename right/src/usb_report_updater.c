@@ -246,6 +246,16 @@ static void applyKeyAction(key_state_t *keyState, key_action_t *action, key_acti
                 Macros_StartMacro(action->playMacro.macroId);
             }
             break;
+        case KeyActionType_PresenceCancel:
+            if (KeyState_ActivatedNow(keyState)) {
+                Presence_Cancel();
+            }
+            break;
+        case KeyActionType_PresenceKey:
+            if (KeyState_ActivatedNow(keyState)) {
+                Presence_Continue(action);
+            }
+            break;
     }
 }
 

@@ -19,6 +19,8 @@
         KeyActionType_SwitchLayer,
         KeyActionType_SwitchKeymap,
         KeyActionType_PlayMacro,
+        KeyActionType_PresenceKey,
+        KeyActionType_PresenceCancel,
     } key_action_type_t;
 
     typedef enum {
