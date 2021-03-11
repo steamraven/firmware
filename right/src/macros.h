@@ -79,5 +79,5 @@
 
     void Macros_StartMacro(uint8_t index);
     void Macros_ContinueMacro(void);
-
+    uint8_t CharacterToScancode(char character);
 #endif

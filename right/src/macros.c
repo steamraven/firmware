@@ -15,7 +15,7 @@ static uint8_t currentMacroIndex;
 static uint16_t nextMacroActionOffset;
 static macro_action_t currentMacroAction;
 
-uint8_t characterToScancode(char character)
+uint8_t CharacterToScancode(char character)
 {
     switch (character) {
         case 'A' ... 'Z':

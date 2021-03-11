@@ -9,7 +9,7 @@ void UsbCommand_Reenumerate(void)
     Wormhole.magicNumber = 0;
     Wormhole.enumerationMode = GetUsbRxBufferUint8(1);
     Wormhole.timeoutMs       = GetUsbRxBufferUint32(2);
-    Presence_Init(*reenumerateCallback, 3, "FRM");
+    Presence_Init(*reenumerateCallback, 3, "FRM", true);
 }
 
 static void reenumerateCallback()

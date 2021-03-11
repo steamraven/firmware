@@ -1,6 +1,8 @@
 #include "parse_extensions.h"
 #include "config_globals.h"
 #include "extensions.h"
+#include "presence.h"
+#include "macros.h"
 
 parser_error_t ParseExtensions(config_buffer_t *buffer, bool applyConfig) {
     
@@ -39,8 +41,29 @@ parser_error_t ParseExtensions(config_buffer_t *buffer, bool applyConfig) {
             }
         } else if (...) {} 
         */
+       if (strncmp("steamraven/secure-presence", extensionName, extensionNameLen) == 0) {
+           if (buffer->offset < maxOffset) {
+                uint16_t passwordLen = 0;
+                const char *password = ReadString(buffer, &passwordLen);
+                if (passwordLen > PRESENCE_MAX_PASSWORD) {
+                    return ParserError_InvalidExtensionValue;
+                }
+                uint8_t i;
+                for (i=0; i < passwordLen; i++) {
+                    uint8_t scancode = CharacterToScancode(password[i]);
+                    if (scancode == 0) {
+                        return ParserError_InvalidExtensionValue;
+                    }
+                    PresencePasswordScancodes[i] = scancode;
+                }
+                if (i < PRESENCE_MAX_PASSWORD) {
+                    PresencePasswordScancodes[i] = 0;
+                }    
+           }
+       }
+
        buffer->offset = maxOffset;
     }
 
-    return ParserError_InvalidModuleCount;
+    return ParserError_Success;
 }
