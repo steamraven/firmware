@@ -162,6 +162,12 @@ void UpdateLayerLeds(void) {
                 case KeyActionType_PlayMacro:
                     keyActionColor = KeyActionColor_Macro;
                     break;
+                case KeyActionType_PresenceKey:
+                    keyActionColor = KeyActionColor_PresenceKey;
+                    break;
+                case KeyActionType_PresenceCancel:
+                    keyActionColor = KeyActionColor_PresenceCancel;
+                    break;
                 default:
                     keyActionColor = KeyActionColor_None;
                     break;

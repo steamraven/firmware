@@ -9,13 +9,22 @@
 
     typedef enum {
         KeyActionColor_None,
-        KeyActionColor_Scancode,
-        KeyActionColor_Modifier,
-        KeyActionColor_Shortcut,
-        KeyActionColor_SwitchLayer,
-        KeyActionColor_SwitchKeymap,
-        KeyActionColor_Mouse,
-        KeyActionColor_Macro,
+        KeyActionColor_White,
+        KeyActionColor_Cyan,
+        KeyActionColor_Blue,
+        KeyActionColor_Yellow,
+        KeyActionColor_Red,
+        KeyActionColor_Green,
+        KeyActionColor_Magenta,
+        KeyActionColor_Scancode = KeyActionColor_White,
+        KeyActionColor_Modifier = KeyActionColor_Cyan,
+        KeyActionColor_Shortcut = KeyActionColor_Blue,
+        KeyActionColor_SwitchLayer = KeyActionColor_Yellow,
+        KeyActionColor_SwitchKeymap = KeyActionColor_Red,
+        KeyActionColor_Mouse = KeyActionColor_Green,
+        KeyActionColor_Macro = KeyActionColor_Magenta,
+        KeyActionColor_PresenceKey = KeyActionColor_Green,
+        KeyActionColor_PresenceCancel = KeyActionColor_Red,
     } key_action_color_t;
 
     typedef struct {
