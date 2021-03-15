@@ -16,7 +16,7 @@
 
     typedef struct {
         uint16_t firstMacroActionOffset;
-        uint16_t macroActionsCount;
+        uint16_t endMacroActionOffset;
     } macro_reference_t;
 
     typedef enum {

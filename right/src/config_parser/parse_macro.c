@@ -18,11 +18,13 @@ parser_error_t parseKeyMacroAction(config_buffer_t *buffer, macro_action_t *macr
         scancode = type == SerializedKeystrokeType_LongMedia ? ReadUInt16(buffer) : ReadUInt8(buffer);
     }
     modifierMask = keyMacroType & 0b01 ? ReadUInt8(buffer) : 0;
-    macroAction->type = MacroActionType_Key;
-    macroAction->key.action = action;
-    macroAction->key.type = type;
-    macroAction->key.scancode = scancode;
-    macroAction->key.modifierMask = modifierMask;
+    if (macroAction != NULL) {
+        macroAction->type = MacroActionType_Key;
+        macroAction->key.action = action;
+        macroAction->key.type = type;
+        macroAction->key.scancode = scancode;
+        macroAction->key.modifierMask = modifierMask;
+    }
     return ParserError_Success;
 }
 
@@ -31,9 +33,11 @@ parser_error_t parseMouseButtonMacroAction(config_buffer_t *buffer, macro_action
     uint8_t action = macroActionType - SerializedMacroActionType_MouseButtonMacroAction;
     uint8_t mouseButtonsMask = ReadUInt8(buffer);
 
-    macroAction->type = MacroActionType_MouseButton;
-    macroAction->mouseButton.action = action;
-    macroAction->mouseButton.mouseButtonsMask = mouseButtonsMask;
+    if (macroAction != NULL) {
+        macroAction->type = MacroActionType_MouseButton;
+        macroAction->mouseButton.action = action;
+        macroAction->mouseButton.mouseButtonsMask = mouseButtonsMask;
+    }
     return ParserError_Success;
 }
 
@@ -42,9 +46,11 @@ parser_error_t parseMoveMouseMacroAction(config_buffer_t *buffer, macro_action_t
     int16_t x = ReadInt16(buffer);
     int16_t y = ReadInt16(buffer);
 
-    macroAction->type = MacroActionType_MoveMouse;
-    macroAction->moveMouse.x = x;
-    macroAction->moveMouse.y = y;
+    if (macroAction != NULL) {
+        macroAction->type = MacroActionType_MoveMouse;
+        macroAction->moveMouse.x = x;
+        macroAction->moveMouse.y = y;
+    }
     return ParserError_Success;
 }
 
@@ -53,9 +59,11 @@ parser_error_t parseScrollMouseMacroAction(config_buffer_t *buffer, macro_action
     int16_t x = ReadInt16(buffer);
     int16_t y = ReadInt16(buffer);
 
-    macroAction->type = MacroActionType_ScrollMouse;
-    macroAction->scrollMouse.x = x;
-    macroAction->scrollMouse.y = y;
+    if (macroAction != NULL) {
+        macroAction->type = MacroActionType_ScrollMouse;
+        macroAction->scrollMouse.x = x;
+        macroAction->scrollMouse.y = y;
+    }
     return ParserError_Success;
 }
 
@@ -63,8 +71,10 @@ parser_error_t parseDelayMacroAction(config_buffer_t *buffer, macro_action_t *ma
 {
     uint16_t delay = ReadUInt16(buffer);
 
-    macroAction->type = MacroActionType_Delay;
-    macroAction->delay.delay = delay;
+    if (macroAction != NULL) {
+        macroAction->type = MacroActionType_Delay;
+        macroAction->delay.delay = delay;
+    }
     return ParserError_Success;
 }
 
@@ -73,9 +83,11 @@ parser_error_t parseTextMacroAction(config_buffer_t *buffer, macro_action_t *mac
     uint16_t textLen;
     const char *text = ReadString(buffer, &textLen);
 
-    macroAction->type = MacroActionType_Text;
-    macroAction->text.text = text;
-    macroAction->text.textLen = textLen;
+    if (macroAction != NULL) {
+        macroAction->type = MacroActionType_Text;
+        macroAction->text.text = text;
+        macroAction->text.textLen = textLen;
+    }
     return ParserError_Success;
 }
 
@@ -109,20 +121,21 @@ parser_error_t ParseMacro(config_buffer_t *buffer, uint8_t macroIdx)
     const char *name = ReadString(buffer, &nameLen);
     uint16_t macroActionsCount = ReadCompactLength(buffer);
     uint16_t firstMacroActionOffset = buffer->offset;
-    macro_action_t dummyMacroAction;
 
+    for (uint16_t i = 0; i < macroActionsCount; i++) {
+        // Parse but don't apply.  Macro will be parsed and applied when run
+        errorCode = ParseMacroAction(buffer, NULL);
+        if (errorCode != ParserError_Success) {
+            return errorCode;
+        }
+    }
+    uint16_t endMacroActionOffset = macroActionsCount > 0 ? buffer->offset : 0;
     (void)isLooped;
     (void)isPrivate;
     (void)name;
     if (!ParserRunDry) {
         AllMacros[macroIdx].firstMacroActionOffset = firstMacroActionOffset;
-        AllMacros[macroIdx].macroActionsCount = macroActionsCount;
-    }
-    for (uint16_t i = 0; i < macroActionsCount; i++) {
-        errorCode = ParseMacroAction(buffer, &dummyMacroAction);
-        if (errorCode != ParserError_Success) {
-            return errorCode;
-        }
+        AllMacros[macroIdx].endMacroActionOffset = endMacroActionOffset;
     }
     return ParserError_Success;
 }

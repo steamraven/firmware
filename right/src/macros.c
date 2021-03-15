@@ -12,7 +12,7 @@ usb_media_keyboard_report_t MacroMediaKeyboardReport;
 usb_system_keyboard_report_t MacroSystemKeyboardReport;
 
 static uint8_t currentMacroIndex;
-static uint16_t currentMacroActionIndex;
+static uint16_t nextMacroActionOffset;
 static macro_action_t currentMacroAction;
 
 uint8_t characterToScancode(char character)
@@ -455,14 +455,15 @@ bool processCurrentMacroAction(void)
 
 void Macros_StartMacro(uint8_t index)
 {
-    if (AllMacros[index].macroActionsCount == 0) {
+    if (AllMacros[index].endMacroActionOffset == 0) {
         return;
     }
     MacroPlaying = true;
     currentMacroIndex = index;
-    currentMacroActionIndex = 0;
     ValidatedUserConfigBuffer.offset = AllMacros[index].firstMacroActionOffset;
     ParseMacroAction(&ValidatedUserConfigBuffer, &currentMacroAction);
+    nextMacroActionOffset = ValidatedUserConfigBuffer.offset;
+
     memset(&MacroMouseReport, 0, sizeof MacroMouseReport);
     memset(&MacroBasicKeyboardReport, 0, sizeof MacroBasicKeyboardReport);
     memset(&MacroMediaKeyboardReport, 0, sizeof MacroMediaKeyboardReport);
@@ -474,9 +475,11 @@ void Macros_ContinueMacro(void)
     if (processCurrentMacroAction()) {
         return;
     }
-    if (++currentMacroActionIndex == AllMacros[currentMacroIndex].macroActionsCount) {
+    if (nextMacroActionOffset == AllMacros[currentMacroIndex].endMacroActionOffset) {
         MacroPlaying = false;
         return;
     }
+    ValidatedUserConfigBuffer.offset = nextMacroActionOffset;
     ParseMacroAction(&ValidatedUserConfigBuffer, &currentMacroAction);
+    nextMacroActionOffset = ValidatedUserConfigBuffer.offset;
 }
