@@ -15,41 +15,6 @@ static usb_device_class_config_list_struct_t UsbDeviceCompositeConfigList = {
     .deviceCallback = usbDeviceCallback,
     .count = USB_DEVICE_CONFIG_HID,
     .config = (usb_device_class_config_struct_t[USB_DEVICE_CONFIG_HID]) {{
-        .classCallback = UsbGenericHidCallback,
-        .classInfomation = (usb_device_class_struct_t[]) {{
-            .type = kUSB_DeviceClassTypeHid,
-            .configurations = USB_DEVICE_CONFIGURATION_COUNT,
-            .interfaceList = (usb_device_interface_list_t[USB_DEVICE_CONFIGURATION_COUNT]) {{
-                .count = USB_GENERIC_HID_INTERFACE_COUNT,
-                .interfaces = (usb_device_interfaces_struct_t[USB_GENERIC_HID_INTERFACE_COUNT]) {{
-                    .classCode = USB_CLASS_HID,
-                    .subclassCode = USB_HID_SUBCLASS_NONE,
-                    .protocolCode = USB_HID_PROTOCOL_NONE,
-                    .interfaceNumber = USB_GENERIC_HID_INTERFACE_INDEX,
-                    .count = 1,
-                    .interface = (usb_device_interface_struct_t[]) {{
-                        .alternateSetting = USB_INTERFACE_ALTERNATE_SETTING_NONE,
-                        .endpointList = {
-                            .count = USB_GENERIC_HID_ENDPOINT_COUNT,
-                            .endpoint = (usb_device_endpoint_struct_t[USB_GENERIC_HID_ENDPOINT_COUNT]) {
-                                {
-                                    .endpointAddress = USB_GENERIC_HID_ENDPOINT_IN_INDEX | (USB_IN << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
-                                    .transferType = USB_ENDPOINT_INTERRUPT,
-                                    .maxPacketSize = USB_GENERIC_HID_INTERRUPT_IN_PACKET_SIZE,
-                                },
-                                {
-                                    .endpointAddress = USB_GENERIC_HID_ENDPOINT_OUT_INDEX | (USB_OUT << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
-                                    .transferType = USB_ENDPOINT_INTERRUPT,
-                                    .maxPacketSize = USB_GENERIC_HID_INTERRUPT_OUT_PACKET_SIZE,
-                                }
-                            }
-                        }
-                    }}
-                }}
-            }}
-        }}
-    },
-    {
         .classCallback = UsbBasicKeyboardCallback,
         .classInfomation = (usb_device_class_struct_t[]) {{
             .type = kUSB_DeviceClassTypeHid,
@@ -70,6 +35,34 @@ static usb_device_class_config_list_struct_t UsbDeviceCompositeConfigList = {
                                 .endpointAddress = USB_BASIC_KEYBOARD_ENDPOINT_INDEX | (USB_IN << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
                                 .transferType = USB_ENDPOINT_INTERRUPT,
                                 .maxPacketSize = USB_BASIC_KEYBOARD_INTERRUPT_IN_PACKET_SIZE,
+                            }}
+                        }
+                    }}
+                }}
+            }}
+        }}
+    },
+    {
+        .classCallback = UsbMouseCallback,
+        .classInfomation = (usb_device_class_struct_t[]) {{
+            .type = kUSB_DeviceClassTypeHid,
+            .configurations = USB_DEVICE_CONFIGURATION_COUNT,
+            .interfaceList = (usb_device_interface_list_t[USB_DEVICE_CONFIGURATION_COUNT]) {{
+                .count = USB_MOUSE_INTERFACE_COUNT,
+                .interfaces = (usb_device_interfaces_struct_t[USB_MOUSE_INTERFACE_COUNT]) {{
+                    .classCode = USB_CLASS_HID,
+                    .subclassCode = USB_HID_SUBCLASS_BOOT,
+                    .protocolCode = USB_HID_PROTOCOL_MOUSE,
+                    .interfaceNumber = USB_MOUSE_INTERFACE_INDEX,
+                    .count = 1,
+                    .interface = (usb_device_interface_struct_t[]) {{
+                        .alternateSetting = USB_INTERFACE_ALTERNATE_SETTING_NONE,
+                        .endpointList = {
+                            USB_MOUSE_ENDPOINT_COUNT,
+                            (usb_device_endpoint_struct_t[USB_MOUSE_ENDPOINT_COUNT]) {{
+                                .endpointAddress = USB_MOUSE_ENDPOINT_INDEX | (USB_IN << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
+                                .transferType = USB_ENDPOINT_INTERRUPT,
+                                .maxPacketSize = USB_MOUSE_INTERRUPT_IN_PACKET_SIZE,
                             }}
                         }
                     }}
@@ -134,27 +127,34 @@ static usb_device_class_config_list_struct_t UsbDeviceCompositeConfigList = {
         }}
     },
     {
-        .classCallback = UsbMouseCallback,
+        .classCallback = UsbGenericHidCallback,
         .classInfomation = (usb_device_class_struct_t[]) {{
             .type = kUSB_DeviceClassTypeHid,
             .configurations = USB_DEVICE_CONFIGURATION_COUNT,
             .interfaceList = (usb_device_interface_list_t[USB_DEVICE_CONFIGURATION_COUNT]) {{
-                .count = USB_MOUSE_INTERFACE_COUNT,
-                .interfaces = (usb_device_interfaces_struct_t[USB_MOUSE_INTERFACE_COUNT]) {{
+                .count = USB_GENERIC_HID_INTERFACE_COUNT,
+                .interfaces = (usb_device_interfaces_struct_t[USB_GENERIC_HID_INTERFACE_COUNT]) {{
                     .classCode = USB_CLASS_HID,
-                    .subclassCode = USB_HID_SUBCLASS_BOOT,
-                    .protocolCode = USB_HID_PROTOCOL_MOUSE,
-                    .interfaceNumber = USB_MOUSE_INTERFACE_INDEX,
+                    .subclassCode = USB_HID_SUBCLASS_NONE,
+                    .protocolCode = USB_HID_PROTOCOL_NONE,
+                    .interfaceNumber = USB_GENERIC_HID_INTERFACE_INDEX,
                     .count = 1,
                     .interface = (usb_device_interface_struct_t[]) {{
                         .alternateSetting = USB_INTERFACE_ALTERNATE_SETTING_NONE,
                         .endpointList = {
-                            USB_MOUSE_ENDPOINT_COUNT,
-                            (usb_device_endpoint_struct_t[USB_MOUSE_ENDPOINT_COUNT]) {{
-                                .endpointAddress = USB_MOUSE_ENDPOINT_INDEX | (USB_IN << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
-                                .transferType = USB_ENDPOINT_INTERRUPT,
-                                .maxPacketSize = USB_MOUSE_INTERRUPT_IN_PACKET_SIZE,
-                            }}
+                            .count = USB_GENERIC_HID_ENDPOINT_COUNT,
+                            .endpoint = (usb_device_endpoint_struct_t[USB_GENERIC_HID_ENDPOINT_COUNT]) {
+                                {
+                                    .endpointAddress = USB_GENERIC_HID_ENDPOINT_IN_INDEX | (USB_IN << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
+                                    .transferType = USB_ENDPOINT_INTERRUPT,
+                                    .maxPacketSize = USB_GENERIC_HID_INTERRUPT_IN_PACKET_SIZE,
+                                },
+                                {
+                                    .endpointAddress = USB_GENERIC_HID_ENDPOINT_OUT_INDEX | (USB_OUT << USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_SHIFT),
+                                    .transferType = USB_ENDPOINT_INTERRUPT,
+                                    .maxPacketSize = USB_GENERIC_HID_INTERRUPT_OUT_PACKET_SIZE,
+                                }
+                            }
                         }
                     }}
                 }}
@@ -216,11 +216,11 @@ static usb_status_t usbDeviceCallback(usb_device_handle handle, uint32_t event, 
             UsbCompositeDevice.attach = 1;
             wakeUpUhk();
             UsbCompositeDevice.currentConfiguration = *temp8;
-            UsbGenericHidSetConfiguration(UsbCompositeDevice.genericHidHandle, *temp8);
             UsbBasicKeyboardSetConfiguration(UsbCompositeDevice.basicKeyboardHandle, *temp8);
+            UsbMouseSetConfiguration(UsbCompositeDevice.mouseHandle, *temp8);
             UsbMediaKeyboardSetConfiguration(UsbCompositeDevice.mediaKeyboardHandle, *temp8);
             UsbSystemKeyboardSetConfiguration(UsbCompositeDevice.systemKeyboardHandle, *temp8);
-            UsbMouseSetConfiguration(UsbCompositeDevice.mouseHandle, *temp8);
+            UsbGenericHidSetConfiguration(UsbCompositeDevice.genericHidHandle, *temp8);
             status = kStatus_USB_Success;
             break;
         case kUSB_DeviceEventGetConfiguration:
@@ -233,11 +233,11 @@ static usb_status_t usbDeviceCallback(usb_device_handle handle, uint32_t event, 
                 uint8_t alternateSetting = (uint8_t)(*temp16 & 0x00FF);
                 if (interface < USB_DEVICE_CONFIG_HID) {
                     UsbCompositeDevice.currentInterfaceAlternateSetting[interface] = alternateSetting;
-                    UsbGenericHidSetInterface(UsbCompositeDevice.genericHidHandle, interface, alternateSetting);
                     UsbBasicKeyboardSetInterface(UsbCompositeDevice.basicKeyboardHandle, interface, alternateSetting);
+                    UsbMouseSetInterface(UsbCompositeDevice.mouseHandle, interface, alternateSetting);
                     UsbMediaKeyboardSetInterface(UsbCompositeDevice.mediaKeyboardHandle, interface, alternateSetting);
                     UsbSystemKeyboardSetInterface(UsbCompositeDevice.systemKeyboardHandle, interface, alternateSetting);
-                    UsbMouseSetInterface(UsbCompositeDevice.mouseHandle, interface, alternateSetting);
+                    UsbGenericHidSetInterface(UsbCompositeDevice.genericHidHandle, interface, alternateSetting);
                     status = kStatus_USB_Success;
                 }
             }
@@ -292,11 +292,11 @@ void InitUsb(void)
 
     UsbCompositeDevice.attach = 0;
     USB_DeviceClassInit(CONTROLLER_ID, &UsbDeviceCompositeConfigList, &UsbCompositeDevice.deviceHandle);
-    UsbCompositeDevice.genericHidHandle = UsbDeviceCompositeConfigList.config[USB_GENERIC_HID_INTERFACE_INDEX].classHandle;
     UsbCompositeDevice.basicKeyboardHandle = UsbDeviceCompositeConfigList.config[USB_BASIC_KEYBOARD_INTERFACE_INDEX].classHandle;
+    UsbCompositeDevice.mouseHandle = UsbDeviceCompositeConfigList.config[USB_MOUSE_INTERFACE_INDEX].classHandle;
     UsbCompositeDevice.mediaKeyboardHandle = UsbDeviceCompositeConfigList.config[USB_MEDIA_KEYBOARD_INTERFACE_INDEX].classHandle;
     UsbCompositeDevice.systemKeyboardHandle = UsbDeviceCompositeConfigList.config[USB_SYSTEM_KEYBOARD_INTERFACE_INDEX].classHandle;
-    UsbCompositeDevice.mouseHandle = UsbDeviceCompositeConfigList.config[USB_MOUSE_INTERFACE_INDEX].classHandle;
+    UsbCompositeDevice.genericHidHandle = UsbDeviceCompositeConfigList.config[USB_GENERIC_HID_INTERFACE_INDEX].classHandle;
 
     uint8_t usbDeviceKhciIrq[] = USB_IRQS;
     uint8_t irqNumber = usbDeviceKhciIrq[CONTROLLER_ID - kUSB_ControllerKhci0];
