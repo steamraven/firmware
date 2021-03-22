@@ -59,7 +59,12 @@
     typedef struct {
         int16_t x;
         int16_t y;
-    } ATTR_PACKED pointer_delta_t;
+    } ATTR_PACKED pointer_position_t;
+    typedef struct {
+        pointer_position_t delta;
+        pointer_position_t abs;
+    } ATTR_PACKED pointer_data_t;
+
 
 // Variables:
 

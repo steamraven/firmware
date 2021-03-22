@@ -299,9 +299,9 @@ void MouseController_ProcessMouseActions()
 
     if (Slaves[SlaveId_RightTouchpad].isConnected) {
         processTouchpadActions();
-        processModuleActions(ModuleId_TouchpadRight, (int16_t)TouchpadEvents.x, (int16_t)TouchpadEvents.y);
-        TouchpadEvents.x = 0;
-        TouchpadEvents.y = 0;
+        processModuleActions(ModuleId_TouchpadRight, (int16_t)TouchpadEvents.pointer.delta.x, (int16_t)TouchpadEvents.pointer.delta.y);
+        TouchpadEvents.pointer.delta.x = 0;
+        TouchpadEvents.pointer.delta.y = 0;
     }
 
     for (uhk_module_driver_id_t driverId=0; driverId<UHK_MODULE_MAX_SLOT_COUNT; driverId++) {
@@ -310,9 +310,9 @@ void MouseController_ProcessMouseActions()
             continue;
         }
 
-        processModuleActions(moduleState->moduleId, (int16_t)moduleState->pointerDelta.x, (int16_t)moduleState->pointerDelta.y);
-        moduleState->pointerDelta.x = 0;
-        moduleState->pointerDelta.y = 0;
+        processModuleActions(moduleState->moduleId, (int16_t)moduleState->pointerData.delta.x, (int16_t)moduleState->pointerData.delta.y);
+        moduleState->pointerData.delta.x = 0;
+        moduleState->pointerData.delta.y = 0;
     }
 
     if (ActiveMouseStates[SerializedMouseAction_LeftClick]) {

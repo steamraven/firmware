@@ -98,12 +98,12 @@ void SlaveTxHandler(void)
             #endif
             uint8_t messageLength = BOOL_BYTES_TO_BITS_COUNT(MODULE_KEY_COUNT);
             if (MODULE_POINTER_COUNT) {
-                pointer_delta_t *pointerDelta = (pointer_delta_t*)(TxMessage.data + messageLength);
-                pointerDelta->x = PointerDelta.x;
-                pointerDelta->y = PointerDelta.y;
-                PointerDelta.x = 0;
-                PointerDelta.y = 0;
-                messageLength += sizeof(pointer_delta_t);
+                pointer_data_t *pointerData = (pointer_data_t*)(TxMessage.data + messageLength);
+                pointerData->delta.x = PointerData.delta.x;
+                pointerData->delta.y = PointerData.delta.y;
+                PointerData.delta.x = 0;
+                PointerData.delta.y = 0;
+                messageLength += sizeof(pointer_data_t);
             }
             TxMessage.length = messageLength;
             break;

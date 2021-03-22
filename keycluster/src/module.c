@@ -26,7 +26,7 @@
 #define BLACKBERRY_TRACKBALL_DOWN_CLOCK kCLOCK_PortA
 #define BLACKBERRY_TRACKBALL_DOWN_PIN 12
 
-pointer_delta_t PointerDelta;
+pointer_data_t PointerData;
 
 key_vector_t keyVector = {
     .itemNum = KEYBOARD_VECTOR_ITEMS_NUM,
@@ -74,25 +74,25 @@ void BlackberryTrackball_Update(void)
 {
     uint8_t newLeft = GPIO_ReadPinInput(BLACKBERRY_TRACKBALL_LEFT_GPIO, BLACKBERRY_TRACKBALL_LEFT_PIN);
     if (oldLeft != newLeft) {
-        PointerDelta.x--;
+        PointerData.delta.x--;
         oldLeft = newLeft;
     }
 
     uint8_t newRight = GPIO_ReadPinInput(BLACKBERRY_TRACKBALL_RIGHT_GPIO, BLACKBERRY_TRACKBALL_RIGHT_PIN);
     if (oldRight != newRight) {
-        PointerDelta.x++;
+        PointerData.delta.x++;
         oldRight = newRight;
     }
 
     uint8_t newUp = GPIO_ReadPinInput(BLACKBERRY_TRACKBALL_UP_GPIO, BLACKBERRY_TRACKBALL_UP_PIN);
     if (oldUp != newUp) {
-        PointerDelta.y--;
+        PointerData.delta.y--;
         oldUp = newUp;
     }
 
     uint8_t newDown = GPIO_ReadPinInput(BLACKBERRY_TRACKBALL_DOWN_GPIO, BLACKBERRY_TRACKBALL_DOWN_PIN);
     if (oldDown != newDown) {
-        PointerDelta.y++;
+        PointerData.delta.y++;
         oldDown = newDown;
     }
 }

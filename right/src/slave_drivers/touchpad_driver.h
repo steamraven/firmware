@@ -19,8 +19,7 @@
         bool singleTap;
         bool tapAndHold;
         bool twoFingerTap;
-        int16_t x;
-        int16_t y;
+        pointer_data_t pointer;
         int8_t wheelY;
         int8_t wheelX;
         int8_t zoomLevel;

@@ -83,7 +83,7 @@
         uint8_t bootloaderI2cAddress;
         uint8_t keyCount;
         uint8_t pointerCount;
-        pointer_delta_t pointerDelta;
+        pointer_data_t pointerData;
     } uhk_module_state_t;
 
     typedef struct {

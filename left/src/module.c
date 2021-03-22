@@ -1,6 +1,6 @@
 #include "module.h"
 
-pointer_delta_t PointerDelta;
+pointer_data_t PointerData;
 
 key_matrix_t keyMatrix = {
     .colNum = KEYBOARD_MATRIX_COLS_NUM,

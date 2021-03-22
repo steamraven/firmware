@@ -67,8 +67,8 @@ void UhkModuleSlaveDriver_Init(uhk_module_driver_id_t uhkModuleDriverId)
     uhkModuleState->firmwareI2cAddress = uhkModuleI2cAddresses->firmwareI2cAddress;
     uhkModuleState->bootloaderI2cAddress = uhkModuleI2cAddresses->bootloaderI2cAddress;
 
-    uhkModuleState->pointerDelta.x = 0;
-    uhkModuleState->pointerDelta.y = 0;
+    uhkModuleState->pointerData.delta.x = 0;
+    uhkModuleState->pointerData.delta.y = 0;
 }
 
 status_t UhkModuleSlaveDriver_Update(uhk_module_driver_id_t uhkModuleDriverId)
@@ -242,9 +242,14 @@ status_t UhkModuleSlaveDriver_Update(uhk_module_driver_id_t uhkModuleDriverId)
                 }
                 if (uhkModuleState->pointerCount) {
                     uint8_t keyStatesLength = BOOL_BYTES_TO_BITS_COUNT(uhkModuleState->keyCount);
-                    pointer_delta_t *pointerDelta = (pointer_delta_t*)(rxMessage->data + keyStatesLength);
-                    uhkModuleState->pointerDelta.x += pointerDelta->x;
-                    uhkModuleState->pointerDelta.y += pointerDelta->y;
+                    pointer_position_t *pointerDelta = (pointer_position_t*)(rxMessage->data + keyStatesLength);
+                    uhkModuleState->pointerData.delta.x += pointerDelta->x;
+                    uhkModuleState->pointerData.delta.y += pointerDelta->y;
+                    if (rxMessage->length > keyStatesLength + sizeof(pointer_data_t)) {
+                        pointer_data_t *pointerData = (pointer_data_t*)(rxMessage->data + keyStatesLength);
+                        uhkModuleState->pointerData.abs.x = pointerData->abs.x;
+                        uhkModuleState->pointerData.abs.y = pointerData->abs.y;
+                    }
                 }
             }
             status = kStatus_Uhk_IdleCycle;

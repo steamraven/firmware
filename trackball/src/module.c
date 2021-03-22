@@ -36,7 +36,7 @@
 #define TRACKBALL_SPI_MASTER SPI0
 #define TRACKBALL_SPI_MASTER_SOURCE_CLOCK kCLOCK_BusClk
 
-pointer_delta_t PointerDelta;
+pointer_data_t PointerData;
 
 key_vector_t keyVector = {
     .itemNum = KEYBOARD_VECTOR_ITEMS_NUM,
@@ -100,13 +100,13 @@ void trackballUpdate(SPI_Type *base, spi_master_handle_t *masterHandle, status_t
             break;
         case ModulePhase_ProcessDeltaY: ;
             int8_t deltaY = (int8_t)rxBuffer[1];
-            PointerDelta.x += deltaY; // This is correct given the sensor orientation.
+            PointerData.delta.x += deltaY; // This is correct given the sensor orientation.
             tx(txBufferGetDeltaX);
             modulePhase = ModulePhase_ProcessDeltaX;
             break;
         case ModulePhase_ProcessDeltaX: ;
             int8_t deltaX = (int8_t)rxBuffer[1];
-            PointerDelta.y += deltaX; // This is correct given the sensor orientation.
+            PointerData.delta.y += deltaX; // This is correct given the sensor orientation.
             tx(txBufferGetMotion);
             modulePhase = ModulePhase_ProcessMotion;
             break;

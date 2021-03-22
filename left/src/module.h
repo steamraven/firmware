@@ -39,7 +39,7 @@
 // Variables:
 
     extern key_matrix_t keyMatrix;
-    extern pointer_delta_t PointerDelta;
+    extern pointer_data_t PointerData;
 
 // Functions:
 

@@ -84,8 +84,10 @@ status_t TouchpadDriver_Update(uint8_t uhkModuleDriverId)
             } else if (gestureEvents.events1.zoom) {
                 TouchpadEvents.zoomLevel += deltaY;
             } else {
-                TouchpadEvents.x -= deltaX;
-                TouchpadEvents.y += deltaY;
+                TouchpadEvents.pointer.delta.x -= deltaX;
+                TouchpadEvents.pointer.delta.y += deltaY;
+                TouchpadEvents.pointer.abs.x = -deltaX;
+                TouchpadEvents.pointer.abs.y = deltaY;
             }
 
             status = I2cAsyncWrite(address, closeCommunicationWindow, sizeof(closeCommunicationWindow));
@@ -99,6 +101,6 @@ status_t TouchpadDriver_Update(uint8_t uhkModuleDriverId)
 
 void TouchpadDriver_Disconnect(uint8_t uhkModuleDriverId)
 {
-    TouchpadEvents.x = 0;
-    TouchpadEvents.y = 0;
+    TouchpadEvents.pointer.delta.x = 0;
+    TouchpadEvents.pointer.delta.y = 0;
 }

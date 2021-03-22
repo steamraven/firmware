@@ -1,7 +1,7 @@
 #include "fsl_gpio.h"
 #include "module.h"
 
-pointer_delta_t PointerDelta;
+pointer_data_t PointerData;
 
 key_vector_t keyVector = {
     .itemNum = KEYBOARD_VECTOR_ITEMS_NUM,
@@ -209,8 +209,8 @@ void PS2_CLOCK_IRQ_HANDLER(void) {
                 if (byte1 & (1 << 5)) {
                     deltaY |= 0xff00;
                 }
-                PointerDelta.x -= deltaX;
-                PointerDelta.y -= deltaY;
+                PointerData.delta.x -= deltaX;
+                PointerData.delta.y -= deltaY;
                 bitId = 0;
                 phase = 7;
             }
