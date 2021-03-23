@@ -87,17 +87,15 @@ status_t TouchpadDriver_Update(uint8_t uhkModuleDriverId)
             KeyStates[uhkModuleDriverId+1][TouchpadKeyId_SwipeRight].hardwareSwitchState |= gestureEvents.events0.swipeXP;
             KeyStates[uhkModuleDriverId+1][TouchpadKeyId_SwipeLeft].hardwareSwitchState |= gestureEvents.events0.swipeXN;
 
-            if (gestureEvents.events1.scroll) {
-                TouchpadEvents.wheelX -= deltaX;
-                TouchpadEvents.wheelY += deltaY;
-            } else if (gestureEvents.events1.zoom) {
-                TouchpadEvents.zoomLevel += deltaY;
-            } else {
-                TouchpadEvents.pointer.delta.x -= deltaX;
-                TouchpadEvents.pointer.delta.y += deltaY;
-                TouchpadEvents.pointer.abs.x = -deltaX;
-                TouchpadEvents.pointer.abs.y = deltaY;
-            }
+            TouchpadEvents.pointer.delta.x -= deltaX;
+            TouchpadEvents.pointer.delta.y += deltaY;
+            TouchpadEvents.pointer.abs.x = -deltaX;
+            TouchpadEvents.pointer.abs.y = deltaY;
+
+            bool cursor = !gestureEvents.events1.scroll && !gestureEvents.events1.zoom;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_MouseMove].hardwareSwitchState = cursor;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_MoveScroll].hardwareSwitchState = gestureEvents.events1.scroll;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_MoveZoom].hardwareSwitchState = gestureEvents.events1.zoom;
 
             status = I2cAsyncWrite(address, closeCommunicationWindow, sizeof(closeCommunicationWindow));
             phase = 1;

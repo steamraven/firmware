@@ -112,7 +112,7 @@ static parser_error_t parseMouseAction(config_buffer_t *buffer, key_action_t *ke
 static parser_error_t parseMouseMoveAction(config_buffer_t *buffer, key_action_t *keyAction) 
 {
     navigation_mode_t navigationMode = ReadUInt8(buffer);
-    if (navigationMode > NavigationMode_Media || navigationMode < NavigationMode_LayerDependant) {
+    if (navigationMode > NavigationMode_Zoom || navigationMode < NavigationMode_LayerDependant) {
         return ParserError_InvalidSerializedMouseMoveAction;
     }
     rational_t multiplier;

@@ -164,6 +164,9 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
+            { .type = KeyActionType_MouseMove,  .mouseMoveAction.navigationMode = NavigationMode_Scroll},   // scroll for touchpad
+            { .type = KeyActionType_MouseMove,  .mouseMoveAction.navigationMode = NavigationMode_Zoom},     // zoom for touchpad
+
         }
     },
 
@@ -289,6 +292,8 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Cursor},   // scroll for touchpad            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Zoom },          // zoom for touchpad
         }
     },
 
@@ -414,6 +419,8 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Scroll},   // scroll for touchpad            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Zoom},     // zoom for touchpad
         }
     },
 
@@ -539,6 +546,8 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Scroll},    // scroll for touchpad          
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Zoom},      // zoom for touchpad
         }
 
     },

@@ -268,6 +268,9 @@ void processModuleActions(module_id_t moduleId, float x, float y, navigation_mod
             // Should never get here
             break;
         }
+        case NavigationMode_Zoom: {
+            break;
+        }
     }
 }
 
@@ -287,13 +290,7 @@ void MouseController_ProcessMouseActions()
     MouseScrollState.xOut = 0;
     MouseScrollState.yOut = 0;
 
-    if (Slaves[SlaveId_RightTouchpad].isConnected) {
-        processModuleActions(ModuleId_TouchpadRight, (int16_t)TouchpadEvents.pointer.delta.x, (int16_t)TouchpadEvents.pointer.delta.y, NavigationMode_LayerDependant);
-        TouchpadEvents.pointer.delta.x = 0;
-        TouchpadEvents.pointer.delta.y = 0;
-    }
-
-    for (uhk_module_driver_id_t driverId=0; driverId<UHK_MODULE_MAX_SLOT_COUNT; driverId++) {
+    for (uhk_module_driver_id_t driverId=UhkModuleDriverId_LeftModule; driverId<=UhkModuleDriverId_RightModule; driverId++) {
         uhk_module_state_t *moduleState = UhkModuleStates + driverId;
         if (moduleState->moduleId == ModuleId_Unavailable || moduleState->pointerCount == 0) {
             continue;
