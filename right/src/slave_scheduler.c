@@ -38,7 +38,7 @@ uhk_slave_t Slaves[SLAVE_COUNT] = {
         .init = TouchpadDriver_Init,
         .update = TouchpadDriver_Update,
         .disconnect = TouchpadDriver_Disconnect,
-        .perDriverId = TouchpadDriverId_Singleton,
+        .perDriverId = UhkModuleDriverId_RightModule,
     },
     {
         .init = LedSlaveDriver_Init,

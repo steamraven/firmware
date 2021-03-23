@@ -216,22 +216,6 @@ static float computeModuleSpeed(float x, float y, uint8_t moduleId)
     return moduleConfiguration->baseSpeed + moduleConfiguration->speed*(float)pow(normalizedSpeed, moduleConfiguration->acceleration);
 }
 
-static void processTouchpadActions() {
-    if (TouchpadEvents.singleTap) {
-        ActiveUsbMouseReport->buttons |= MouseButton_Left;
-        TouchpadEvents.singleTap = false;
-    }
-
-    if (TouchpadEvents.twoFingerTap) {
-        ActiveUsbMouseReport->buttons |= MouseButton_Right;
-        TouchpadEvents.twoFingerTap = false;
-    }
-
-    if (TouchpadEvents.tapAndHold) {
-        ActiveUsbMouseReport->buttons |= MouseButton_Left;
-    }
-}
-
 void processModuleActions(module_id_t moduleId, float x, float y, navigation_mode_t navigationMode) {
     module_configuration_t *moduleConfiguration = GetModuleConfiguration(moduleId);
     if (navigationMode == NavigationMode_LayerDependant) {
@@ -304,7 +288,6 @@ void MouseController_ProcessMouseActions()
     MouseScrollState.yOut = 0;
 
     if (Slaves[SlaveId_RightTouchpad].isConnected) {
-        processTouchpadActions();
         processModuleActions(ModuleId_TouchpadRight, (int16_t)TouchpadEvents.pointer.delta.x, (int16_t)TouchpadEvents.pointer.delta.y, NavigationMode_LayerDependant);
         TouchpadEvents.pointer.delta.x = 0;
         TouchpadEvents.pointer.delta.y = 0;

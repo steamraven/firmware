@@ -18,7 +18,11 @@ typedef struct {
     struct {
         bool singleTap: 1;
         bool tapAndHold: 1;
-        uint8_t unused: 6;
+        bool swipeXN: 1;
+        bool swipeXP: 1;
+        bool swipeYP: 1;
+        bool swipeYN: 1;
+        uint8_t unused: 2;
     } events0;
     struct {
         bool twoFingerTap : 1;
@@ -75,8 +79,13 @@ status_t TouchpadDriver_Update(uint8_t uhkModuleDriverId)
             deltaY = (int16_t)(buffer[1] | buffer[0]<<8);
             deltaX = (int16_t)(buffer[3] | buffer[2]<<8);
 
-            TouchpadEvents.singleTap |= gestureEvents.events0.singleTap;
-            TouchpadEvents.twoFingerTap |= gestureEvents.events1.twoFingerTap;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_LeftButton].hardwareSwitchState |= gestureEvents.events0.singleTap;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_RightButton].hardwareSwitchState |= gestureEvents.events1.twoFingerTap;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_TapAndHold].hardwareSwitchState |= gestureEvents.events0.tapAndHold;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_SwipeUp].hardwareSwitchState |= gestureEvents.events0.swipeYP;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_SwipeDown].hardwareSwitchState |= gestureEvents.events0.swipeYN;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_SwipeRight].hardwareSwitchState |= gestureEvents.events0.swipeXP;
+            KeyStates[uhkModuleDriverId+1][TouchpadKeyId_SwipeLeft].hardwareSwitchState |= gestureEvents.events0.swipeXN;
 
             if (gestureEvents.events1.scroll) {
                 TouchpadEvents.wheelX -= deltaX;
@@ -103,4 +112,5 @@ void TouchpadDriver_Disconnect(uint8_t uhkModuleDriverId)
 {
     TouchpadEvents.pointer.delta.x = 0;
     TouchpadEvents.pointer.delta.y = 0;
+    memset(KeyStates[uhkModuleDriverId+1], 0, MAX_KEY_COUNT_PER_MODULE * sizeof(key_state_t));
 }

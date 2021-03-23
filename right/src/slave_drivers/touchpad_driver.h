@@ -9,6 +9,22 @@
     #include "slot.h"
     #include "usb_interfaces/usb_interface_mouse.h"
 
+// Defines:
+
+    typedef enum {
+        TouchpadKeyId_LeftButton,
+        TouchpadKeyId_RightButton,
+        TouchpadKeyId_MiddleButton,
+        TouchpadKeyId_MouseMove,
+        TouchpadKeyId_TapAndHold,
+        TouchpadKeyId_SwipeUp,
+        TouchpadKeyId_SwipeDown,
+        TouchpadKeyId_SwipeLeft,
+        TouchpadKeyId_SwipeRight,
+        TouchpadKeyId_MoveScroll,
+        TouchpadKeyId_MoveZoom,
+    } touchpad_keyid_t;
+
 // Typedefs:
 
     typedef enum {
@@ -16,9 +32,6 @@
     } touchpad_driver_id_t;
 
     typedef struct {
-        bool singleTap;
-        bool tapAndHold;
-        bool twoFingerTap;
         pointer_data_t pointer;
         int8_t wheelY;
         int8_t wheelX;

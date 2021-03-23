@@ -159,6 +159,11 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_MouseMove,  .mouseMoveAction.navigationMode = NavigationMode_Cursor},  // for mouse movement
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },  // tap and hold for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollUp },  // swipe up for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
         }
     },
 
@@ -279,6 +284,11 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Scroll},                                             // for mouse movement            
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },  // tap and hold for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollUp },  // swipe up for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
         }
     },
 
@@ -399,6 +409,11 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Caret},    // for mouse movement            
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },  // tap and hold for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollUp },  // swipe up for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
         }
     },
 
@@ -519,6 +534,11 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Cursor}, // for mouse movement  
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },  // tap and hold for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollUp },  // swipe up for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollDown },  // swipe down for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollLeft },  // swipe left for touchpad
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_ScrollRight },  // swipe right for touchpad
         }
 
     },
