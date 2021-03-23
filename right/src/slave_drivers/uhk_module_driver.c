@@ -241,6 +241,8 @@ status_t UhkModuleSlaveDriver_Update(uhk_module_driver_id_t uhkModuleDriverId)
                     KeyStates[slotId][keyId].hardwareSwitchState = keyStatesBuffer[keyId];
                 }
                 if (uhkModuleState->pointerCount) {
+                    // Enable processing of mouse move keymap.  Set after last normal key (button)
+                    KeyStates[uhkModuleDriverId+1][uhkModuleState->keyCount].hardwareSwitchState = 1;
                     uint8_t keyStatesLength = BOOL_BYTES_TO_BITS_COUNT(uhkModuleState->keyCount);
                     pointer_position_t *pointerDelta = (pointer_position_t*)(rxMessage->data + keyStatesLength);
                     uhkModuleState->pointerData.delta.x += pointerDelta->x;

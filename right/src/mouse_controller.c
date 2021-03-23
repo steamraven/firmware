@@ -290,17 +290,6 @@ void MouseController_ProcessMouseActions()
     MouseScrollState.xOut = 0;
     MouseScrollState.yOut = 0;
 
-    for (uhk_module_driver_id_t driverId=UhkModuleDriverId_LeftModule; driverId<=UhkModuleDriverId_RightModule; driverId++) {
-        uhk_module_state_t *moduleState = UhkModuleStates + driverId;
-        if (moduleState->moduleId == ModuleId_Unavailable || moduleState->pointerCount == 0) {
-            continue;
-        }
-
-        processModuleActions(moduleState->moduleId, (int16_t)moduleState->pointerData.delta.x, (int16_t)moduleState->pointerData.delta.y, NavigationMode_LayerDependant);
-        moduleState->pointerData.delta.x = 0;
-        moduleState->pointerData.delta.y = 0;
-    }
-
     if (ActiveMouseStates[SerializedMouseAction_LeftClick]) {
         ActiveUsbMouseReport->buttons |= MouseButton_Left;
     }
