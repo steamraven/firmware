@@ -34,8 +34,9 @@
 
 // Functions:
 
-    module_configuration_t* GetModuleConfiguration(int8_t moduleId);
+    module_configuration_t* GetModuleConfiguration(module_id_t moduleId);
     bool IsModuleAttached(module_id_t moduleId);
     slot_t ModuleIdToSlotId(module_id_t moduleId);
+    module_id_t SlotIdToModuleId(slot_t slotId);
 
 #endif

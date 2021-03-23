@@ -60,7 +60,7 @@ module_configuration_t ModuleConfigurations[ModuleId_ModuleCount] = {
     },
 };
 
-module_configuration_t* GetModuleConfiguration(int8_t moduleId) {
+module_configuration_t* GetModuleConfiguration(module_id_t moduleId) {
     return ModuleConfigurations + moduleId - ModuleId_FirstModule;
 }
 
@@ -94,5 +94,22 @@ slot_t ModuleIdToSlotId(module_id_t moduleId) {
             return SlotId_RightModule;
         default:
             return 0;
+    }
+}
+
+module_id_t SlotIdToModuleId(slot_t slotId) {
+    switch (slotId) {
+        case SlotId_RightKeyboardHalf:
+            return ModuleId_RightKeyboardHalf;
+        case SlotId_RightModule:
+            if (Slaves[SlaveId_RightTouchpad].isConnected) {
+                return ModuleId_TouchpadRight;
+            }
+        case SlotId_LeftKeyboardHalf:
+        case SlotId_LeftModule:
+            return UhkModuleStates[UhkModuleSlaveDriver_SlotIdToDriverId(slotId)].moduleId;
+        default:
+            return 0;
+        
     }
 }

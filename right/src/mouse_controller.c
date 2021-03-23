@@ -232,7 +232,7 @@ static void processTouchpadActions() {
     }
 }
 
-void processModuleActions(uint8_t moduleId, float x, float y) {
+void processModuleActions(module_id_t moduleId, float x, float y) {
     module_configuration_t *moduleConfiguration = GetModuleConfiguration(moduleId);
     navigation_mode_t navigationMode = moduleConfiguration->navigationModes[ActiveLayer];
     int16_t yInversion = moduleId == ModuleId_KeyClusterLeft ||  moduleId == ModuleId_TouchpadRight ? -1 : 1;
@@ -304,8 +304,8 @@ void MouseController_ProcessMouseActions()
         TouchpadEvents.y = 0;
     }
 
-    for (uint8_t moduleSlotId=0; moduleSlotId<UHK_MODULE_MAX_SLOT_COUNT; moduleSlotId++) {
-        uhk_module_state_t *moduleState = UhkModuleStates + moduleSlotId;
+    for (uhk_module_driver_id_t driverId=0; driverId<UHK_MODULE_MAX_SLOT_COUNT; driverId++) {
+        uhk_module_state_t *moduleState = UhkModuleStates + driverId;
         if (moduleState->moduleId == ModuleId_Unavailable || moduleState->pointerCount == 0) {
             continue;
         }

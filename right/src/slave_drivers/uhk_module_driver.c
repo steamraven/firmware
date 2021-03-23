@@ -10,12 +10,12 @@
 
 uhk_module_state_t UhkModuleStates[UHK_MODULE_MAX_SLOT_COUNT];
 
-uint8_t UhkModuleSlaveDriver_SlotIdToDriverId(uint8_t slotId)
+uhk_module_driver_id_t UhkModuleSlaveDriver_SlotIdToDriverId(slot_t slotId)
 {
     return slotId-1;
 }
 
-uint8_t UhkModuleSlaveDriver_DriverIdToSlotId(uint8_t uhkModuleDriverId)
+slot_t UhkModuleSlaveDriver_DriverIdToSlotId(uhk_module_driver_id_t uhkModuleDriverId)
 {
     return uhkModuleDriverId+1;
 }
@@ -23,7 +23,7 @@ uint8_t UhkModuleSlaveDriver_DriverIdToSlotId(uint8_t uhkModuleDriverId)
 static uint8_t keyStatesBuffer[MAX_KEY_COUNT_PER_MODULE];
 static i2c_message_t txMessage;
 
-static uhk_module_i2c_addresses_t moduleIdsToI2cAddresses[] = {
+static uhk_module_i2c_addresses_t driverIdsToI2cAddresses[] = {
     { // UhkModuleDriverId_LeftKeyboardHalf
         .firmwareI2cAddress   = I2C_ADDRESS_LEFT_KEYBOARD_HALF_FIRMWARE,
         .bootloaderI2cAddress = I2C_ADDRESS_LEFT_KEYBOARD_HALF_BOOTLOADER
@@ -48,7 +48,7 @@ static status_t rx(i2c_message_t *rxMessage, uint8_t i2cAddress)
     return I2cAsyncReadMessage(i2cAddress, rxMessage);
 }
 
-void UhkModuleSlaveDriver_Init(uint8_t uhkModuleDriverId)
+void UhkModuleSlaveDriver_Init(uhk_module_driver_id_t uhkModuleDriverId)
 {
     uhk_module_state_t *uhkModuleState = UhkModuleStates + uhkModuleDriverId;
     uhk_module_vars_t *uhkModuleSourceVars = &uhkModuleState->sourceVars;
@@ -63,7 +63,7 @@ void UhkModuleSlaveDriver_Init(uint8_t uhkModuleDriverId)
     uhk_module_phase_t *uhkModulePhase = &uhkModuleState->phase;
     *uhkModulePhase = UhkModulePhase_RequestSync;
 
-    uhk_module_i2c_addresses_t *uhkModuleI2cAddresses = moduleIdsToI2cAddresses + uhkModuleDriverId;
+    uhk_module_i2c_addresses_t *uhkModuleI2cAddresses = driverIdsToI2cAddresses + uhkModuleDriverId;
     uhkModuleState->firmwareI2cAddress = uhkModuleI2cAddresses->firmwareI2cAddress;
     uhkModuleState->bootloaderI2cAddress = uhkModuleI2cAddresses->bootloaderI2cAddress;
 
@@ -71,7 +71,7 @@ void UhkModuleSlaveDriver_Init(uint8_t uhkModuleDriverId)
     uhkModuleState->pointerDelta.y = 0;
 }
 
-status_t UhkModuleSlaveDriver_Update(uint8_t uhkModuleDriverId)
+status_t UhkModuleSlaveDriver_Update(uhk_module_driver_id_t uhkModuleDriverId)
 {
     status_t status = kStatus_Uhk_IdleSlave;
     uhk_module_state_t *uhkModuleState = UhkModuleStates + uhkModuleDriverId;
@@ -235,7 +235,7 @@ status_t UhkModuleSlaveDriver_Update(uint8_t uhkModuleDriverId)
             break;
         case UhkModulePhase_ProcessKeystates:
             if (CRC16_IsMessageValid(rxMessage)) {
-                uint8_t slotId = UhkModuleSlaveDriver_DriverIdToSlotId(uhkModuleDriverId);
+                slot_t slotId = UhkModuleSlaveDriver_DriverIdToSlotId(uhkModuleDriverId);
                 BoolBitsToBytes(rxMessage->data, keyStatesBuffer, uhkModuleState->keyCount);
                 for (uint8_t keyId=0; keyId < uhkModuleState->keyCount; keyId++) {
                     KeyStates[slotId][keyId].hardwareSwitchState = keyStatesBuffer[keyId];
@@ -283,15 +283,15 @@ status_t UhkModuleSlaveDriver_Update(uint8_t uhkModuleDriverId)
     return status;
 }
 
-void UhkModuleSlaveDriver_Disconnect(uint8_t uhkModuleDriverId)
+void UhkModuleSlaveDriver_Disconnect(uhk_module_driver_id_t uhkModuleDriverId)
 {
-    if (uhkModuleDriverId == SlaveId_LeftKeyboardHalf) {
+    if (uhkModuleDriverId == UhkModuleDriverId_LeftKeyboardHalf) {
         Slaves[SlaveId_LeftLedDriver].isConnected = false;
     }
 
     uhk_module_state_t *uhkModuleState = UhkModuleStates + uhkModuleDriverId;
     uhkModuleState->moduleId = 0;
-    uint8_t slotId = UhkModuleSlaveDriver_DriverIdToSlotId(uhkModuleDriverId);
+    slot_t slotId = UhkModuleSlaveDriver_DriverIdToSlotId(uhkModuleDriverId);
 
     if (IS_VALID_MODULE_SLOT(slotId)) {
         memset(KeyStates[slotId], 0, MAX_KEY_COUNT_PER_MODULE * sizeof(key_state_t));

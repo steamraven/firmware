@@ -20,7 +20,7 @@
         UhkModuleDriverId_LeftKeyboardHalf,
         UhkModuleDriverId_LeftModule,
         UhkModuleDriverId_RightModule,
-    } uhk_module_id_t;
+    } uhk_module_driver_id_t;
 
     typedef enum {
 
@@ -97,11 +97,11 @@
 
 // Functions:
 
-    uint8_t UhkModuleSlaveDriver_SlotIdToDriverId(uint8_t slotId);
-    uint8_t UhkModuleSlaveDriver_DriverIdToSlotId(uint8_t uhkModuleDriverId);
+    uhk_module_driver_id_t UhkModuleSlaveDriver_SlotIdToDriverId(slot_t slotId);
+    slot_t UhkModuleSlaveDriver_DriverIdToSlotId(uhk_module_driver_id_t uhkModuleDriverId);
 
-    void UhkModuleSlaveDriver_Init(uint8_t uhkModuleDriverId);
-    status_t UhkModuleSlaveDriver_Update(uint8_t uhkModuleDriverId);
-    void UhkModuleSlaveDriver_Disconnect(uint8_t uhkModuleDriverId);
+    void UhkModuleSlaveDriver_Init(uhk_module_driver_id_t uhkModuleDriverId);
+    status_t UhkModuleSlaveDriver_Update(uhk_module_driver_id_t uhkModuleDriverId);
+    void UhkModuleSlaveDriver_Disconnect(uhk_module_driver_id_t uhkModuleDriverId);
 
 #endif
