@@ -4,6 +4,7 @@
 #include "key_action.h"
 #include "keymap.h"
 #include "led_display.h"
+#include "rational.h"
 
 static parser_error_t parseNoneAction(config_buffer_t *buffer, key_action_t *keyAction)
 {
@@ -108,6 +109,25 @@ static parser_error_t parseMouseAction(config_buffer_t *buffer, key_action_t *ke
     return ParserError_Success;
 }
 
+static parser_error_t parseMouseMoveAction(config_buffer_t *buffer, key_action_t *keyAction) 
+{
+    rational_t multiplier;
+
+    multiplier.parts.top = ReadUInt8(buffer);
+    multiplier.parts.bottom = ReadUInt8(buffer);
+
+    if ((multiplier.parts.top == 0) ^ (multiplier.parts.bottom == 0)) {
+        return ParserError_InvalidSerializedMouseMoveAction;
+    }
+
+    if (keyAction != NULL) {
+        keyAction->type = KeyActionType_MouseMove;
+        keyAction->mouseMoveAction.multiplier = multiplier;
+   }
+
+    return ParserError_Success;
+}
+
 static parser_error_t parseKeyAction(config_buffer_t *buffer, key_action_t *keyAction, uint8_t keymapCount, uint8_t macroCount)
 {
     uint8_t keyActionType = ReadUInt8(buffer);
@@ -125,6 +145,8 @@ static parser_error_t parseKeyAction(config_buffer_t *buffer, key_action_t *keyA
             return parseMouseAction(buffer, keyAction);
         case SerializedKeyActionType_PlayMacro:
             return parsePlayMacroAction(buffer, keyAction, macroCount);
+        case SerializedKeyActionType_MouseMove:
+            return parseMouseMoveAction(buffer, keyAction);
     }
     return ParserError_InvalidSerializedKeyActionType;
 }

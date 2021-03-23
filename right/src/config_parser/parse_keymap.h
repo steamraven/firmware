@@ -25,7 +25,8 @@
         SerializedKeyActionType_SwitchLayer,
         SerializedKeyActionType_SwitchKeymap,
         SerializedKeyActionType_Mouse,
-        SerializedKeyActionType_PlayMacro
+        SerializedKeyActionType_PlayMacro,
+        SerializedKeyActionType_MouseMove,
     } serialized_key_action_type_t;
 
     typedef enum {

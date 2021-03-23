@@ -286,14 +286,14 @@ void MouseController_ProcessMouseActions()
     mouseElapsedTime = Timer_GetElapsedTimeAndSetCurrent(&mouseUsbReportUpdateTime);
 
     processMouseKineticState(&MouseMoveState);
-    ActiveUsbMouseReport->x = MouseMoveState.xOut;
-    ActiveUsbMouseReport->y = MouseMoveState.yOut;
+    ActiveUsbMouseReport->x += MouseMoveState.xOut;
+    ActiveUsbMouseReport->y += MouseMoveState.yOut;
     MouseMoveState.xOut = 0;
     MouseMoveState.yOut = 0;
 
     processMouseKineticState(&MouseScrollState);
-    ActiveUsbMouseReport->wheelX = MouseScrollState.xOut;
-    ActiveUsbMouseReport->wheelY = MouseScrollState.yOut;
+    ActiveUsbMouseReport->wheelX += MouseScrollState.xOut;
+    ActiveUsbMouseReport->wheelY += MouseScrollState.yOut;
     MouseScrollState.xOut = 0;
     MouseScrollState.yOut = 0;
 
@@ -338,5 +338,18 @@ void MouseController_ProcessMouseActions()
     }
     if (ActiveMouseStates[SerializedMouseAction_Button_8]) {
         ActiveUsbMouseReport->buttons |= MouseButton_8;
+    }
+}
+
+void MouseController_ProcessMouseMove(slot_t slotId) {
+    uhk_module_state_t *moduleState =  &UhkModuleStates[UhkModuleSlaveDriver_SlotIdToDriverId(slotId)];
+    if (slotId == SlotId_RightModule && Slaves[SlaveId_RightTouchpad].isConnected) {
+        processModuleActions(ModuleId_TouchpadRight, TouchpadEvents.pointer.delta.x, TouchpadEvents.pointer.delta.y);
+        TouchpadEvents.pointer.delta.x = 0;
+        TouchpadEvents.pointer.delta.y = 0;
+    } else if (moduleState->moduleId != ModuleId_Unavailable &&  moduleState->pointerCount >= 0) {
+        processModuleActions(moduleState->moduleId, moduleState->pointerData.delta.x, moduleState->pointerData.delta.y);
+        moduleState->pointerData.delta.x = 0;
+        moduleState->pointerData.delta.y = 0;
     }
 }

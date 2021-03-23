@@ -8,6 +8,7 @@
     #include "lufa/HIDClassCommon.h"
     #include "usb_composite_device.h"
     #include "module.h"
+    #include "rational.h"
 
 // Typedefs:
 
@@ -18,6 +19,7 @@
         KeyActionType_SwitchLayer,
         KeyActionType_SwitchKeymap,
         KeyActionType_PlayMacro,
+        KeyActionType_MouseMove,
     } key_action_type_t;
 
     typedef enum {
@@ -63,6 +65,9 @@
             struct {
                 uint8_t macroId;
             } ATTR_PACKED playMacro;
+            struct {
+                rational_t multiplier;
+            } ATTR_PACKED mouseMoveAction;
         };
     } ATTR_PACKED key_action_t;
 

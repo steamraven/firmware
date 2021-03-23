@@ -23,6 +23,7 @@
         ParserError_InvalidMacroCount                   = 12,
         ParserError_InvalidSerializedPlayMacroAction    = 13,
         ParserError_InvalidMouseKineticProperty         = 14,
+        ParserError_InvalidSerializedMouseMoveAction    = 15,
     } parser_error_t;
 
 // Functions:

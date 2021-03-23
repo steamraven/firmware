@@ -146,6 +146,10 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_DELETE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_BACKSPACE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_ENTER }},
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement
         },
 
         // Right module
@@ -153,6 +157,8 @@ keymap_t CurrentKeymap = {
             // Row 1
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement
         }
     },
 
@@ -260,6 +266,10 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_DELETE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_BACKSPACE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_ENTER }},
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },            
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
         },
 
         // Right module
@@ -267,6 +277,8 @@ keymap_t CurrentKeymap = {
             // Row 1
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
         }
     },
 
@@ -374,6 +386,10 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_DELETE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_BACKSPACE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_ENTER }},
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },            
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
         },
 
         // Right module
@@ -381,6 +397,8 @@ keymap_t CurrentKeymap = {
             // Row 1
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
         }
     },
 
@@ -488,6 +506,10 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_DELETE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_BACKSPACE }},
             { .type = KeyActionType_Keystroke, .keystroke = { .scancode = HID_KEYBOARD_SC_ENTER }},
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },            
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
         },
 
         // Right module
@@ -495,6 +517,8 @@ keymap_t CurrentKeymap = {
             // Row 1
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
+            { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
+            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
         }
 
     },

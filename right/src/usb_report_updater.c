@@ -246,6 +246,9 @@ static void applyKeyAction(key_state_t *keyState, key_action_t *action, key_acti
                 Macros_StartMacro(action->playMacro.macroId);
             }
             break;
+        case KeyActionType_MouseMove:
+            MouseController_ProcessMouseMove(slotId);
+            break;
     }
 }
 
