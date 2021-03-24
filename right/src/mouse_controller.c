@@ -232,9 +232,11 @@ static void processTouchpadActions() {
     }
 }
 
-void processModuleActions(module_id_t moduleId, float x, float y) {
+void processModuleActions(module_id_t moduleId, float x, float y, navigation_mode_t navigationMode) {
     module_configuration_t *moduleConfiguration = GetModuleConfiguration(moduleId);
-    navigation_mode_t navigationMode = moduleConfiguration->navigationModes[ActiveLayer];
+    if (navigationMode == NavigationMode_LayerDependant) {
+        navigationMode = moduleConfiguration->navigationModes[ActiveLayer];
+    }
     int16_t yInversion = moduleId == ModuleId_KeyClusterLeft ||  moduleId == ModuleId_TouchpadRight ? -1 : 1;
     int8_t scrollSpeedDivisor = 8;
     float speed = computeModuleSpeed(x, y, moduleId);
@@ -278,6 +280,10 @@ void processModuleActions(module_id_t moduleId, float x, float y) {
         case NavigationMode_Media: {
             break;
         }
+        case NavigationMode_LayerDependant: {
+            // Should never get here
+            break;
+        }
     }
 }
 
@@ -299,7 +305,7 @@ void MouseController_ProcessMouseActions()
 
     if (Slaves[SlaveId_RightTouchpad].isConnected) {
         processTouchpadActions();
-        processModuleActions(ModuleId_TouchpadRight, (int16_t)TouchpadEvents.pointer.delta.x, (int16_t)TouchpadEvents.pointer.delta.y);
+        processModuleActions(ModuleId_TouchpadRight, (int16_t)TouchpadEvents.pointer.delta.x, (int16_t)TouchpadEvents.pointer.delta.y, NavigationMode_LayerDependant);
         TouchpadEvents.pointer.delta.x = 0;
         TouchpadEvents.pointer.delta.y = 0;
     }
@@ -310,7 +316,7 @@ void MouseController_ProcessMouseActions()
             continue;
         }
 
-        processModuleActions(moduleState->moduleId, (int16_t)moduleState->pointerData.delta.x, (int16_t)moduleState->pointerData.delta.y);
+        processModuleActions(moduleState->moduleId, (int16_t)moduleState->pointerData.delta.x, (int16_t)moduleState->pointerData.delta.y, NavigationMode_LayerDependant);
         moduleState->pointerData.delta.x = 0;
         moduleState->pointerData.delta.y = 0;
     }
@@ -341,14 +347,14 @@ void MouseController_ProcessMouseActions()
     }
 }
 
-void MouseController_ProcessMouseMove(slot_t slotId) {
+void MouseController_ProcessMouseMove(slot_t slotId, navigation_mode_t navigationMode) {
     uhk_module_state_t *moduleState =  &UhkModuleStates[UhkModuleSlaveDriver_SlotIdToDriverId(slotId)];
     if (slotId == SlotId_RightModule && Slaves[SlaveId_RightTouchpad].isConnected) {
-        processModuleActions(ModuleId_TouchpadRight, TouchpadEvents.pointer.delta.x, TouchpadEvents.pointer.delta.y);
+        processModuleActions(ModuleId_TouchpadRight, TouchpadEvents.pointer.delta.x, TouchpadEvents.pointer.delta.y, navigationMode);
         TouchpadEvents.pointer.delta.x = 0;
         TouchpadEvents.pointer.delta.y = 0;
     } else if (moduleState->moduleId != ModuleId_Unavailable &&  moduleState->pointerCount >= 0) {
-        processModuleActions(moduleState->moduleId, moduleState->pointerData.delta.x, moduleState->pointerData.delta.y);
+        processModuleActions(moduleState->moduleId, moduleState->pointerData.delta.x, moduleState->pointerData.delta.y, navigationMode);
         moduleState->pointerData.delta.x = 0;
         moduleState->pointerData.delta.y = 0;
     }

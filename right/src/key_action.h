@@ -66,6 +66,7 @@
                 uint8_t macroId;
             } ATTR_PACKED playMacro;
             struct {
+                navigation_mode_t navigationMode;
                 rational_t multiplier;
             } ATTR_PACKED mouseMoveAction;
         };

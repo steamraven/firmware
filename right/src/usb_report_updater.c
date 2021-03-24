@@ -247,7 +247,7 @@ static void applyKeyAction(key_state_t *keyState, key_action_t *action, key_acti
             }
             break;
         case KeyActionType_MouseMove:
-            MouseController_ProcessMouseMove(slotId);
+            MouseController_ProcessMouseMove(slotId, action->mouseMoveAction.navigationMode);
             break;
     }
 }

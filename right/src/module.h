@@ -14,6 +14,7 @@
 // Typedefs:
 
     typedef enum {
+        NavigationMode_LayerDependant = 0,
         NavigationMode_Cursor,
         NavigationMode_Scroll,
         NavigationMode_Caret,

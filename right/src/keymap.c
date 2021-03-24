@@ -149,7 +149,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Scroll},    // for mouse movement
         },
 
         // Right module
@@ -158,7 +158,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement
+            { .type = KeyActionType_MouseMove,  .mouseMoveAction.navigationMode = NavigationMode_Cursor},  // for mouse movement
         }
     },
 
@@ -269,7 +269,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },            
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Cursor},  // for mouse movement 
         },
 
         // Right module
@@ -278,7 +278,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Scroll},                                             // for mouse movement            
         }
     },
 
@@ -389,7 +389,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },            
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Caret},   // for mouse movement            
         },
 
         // Right module
@@ -398,7 +398,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Caret},    // for mouse movement            
         }
     },
 
@@ -509,7 +509,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },            
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Scroll},   // for mouse movement            
         },
 
         // Right module
@@ -518,7 +518,7 @@ keymap_t CurrentKeymap = {
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_LeftClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_RightClick },
             { .type = KeyActionType_Mouse, .mouseAction = SerializedMouseAction_MiddleClick },
-            { .type = KeyActionType_MouseMove, },                                             // for mouse movement            
+            { .type = KeyActionType_MouseMove, .mouseMoveAction.navigationMode = NavigationMode_Cursor}, // for mouse movement  
         }
 
     },

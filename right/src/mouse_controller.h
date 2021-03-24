@@ -50,5 +50,5 @@
 
     void MouseController_ActivateDirectionSigns(uint8_t state);
     void MouseController_ProcessMouseActions();
-    void MouseController_ProcessMouseMove(slot_t slotId);
+    void MouseController_ProcessMouseMove(slot_t slotId, navigation_mode_t navigationMode);
 #endif
