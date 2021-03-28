@@ -1,8 +1,11 @@
 #include "keymap.h"
 #include "layer_switcher.h"
 #include "ledmap.h"
+#include "led_display.h"
 #include "slave_drivers/is31fl3xxx_driver.h"
 #include "device.h"
+
+bool ResetLeds = true;
 
 rgb_t KeyActionColors[] = {
     {.red=0, .green=0, .blue=0}, // KeyActionColor_None
@@ -135,6 +138,7 @@ rgb_t LedMap[SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE] = {
 };
 
 void UpdateLayerLeds(void) {
+    LedSlaveDriver_UpdateLeds();
 #if DEVICE_ID == DEVICE_ID_UHK60V2
     for (uint8_t slotId=0; slotId<SLOT_COUNT; slotId++) {
         for (uint8_t keyId=0; keyId<MAX_KEY_COUNT_PER_MODULE; keyId++) {
@@ -179,4 +183,5 @@ void UpdateLayerLeds(void) {
         }
     }
 #endif
+    LedDisplay_UpdateAll();
 }

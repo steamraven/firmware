@@ -28,7 +28,7 @@
 
     extern rgb_t KeyActionColors[];
     extern rgb_t LedMap[SLOT_COUNT][MAX_KEY_COUNT_PER_MODULE];
-
+    extern bool ResetLeds;
 // Functions:
 
     extern void UpdateLayerLeds(void);

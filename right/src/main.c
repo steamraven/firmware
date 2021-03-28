@@ -11,6 +11,7 @@
 #include "peripherals/reset_button.h"
 #include "config_parser/config_globals.h"
 #include "usb_report_updater.h"
+#include "ledmap.h"
 
 static bool IsEepromInitialized = false;
 static bool IsConfigInitialized = false;
@@ -54,6 +55,10 @@ int main(void)
             KeyMatrix_ScanRow(&RightKeyMatrix);
             ++MatrixScanCounter;
             UpdateUsbReports();
+            if (ResetLeds) {
+                ResetLeds=false;
+                UpdateLayerLeds();                
+            }
             UpdateSlaveScheduler();
             __WFI();
         }

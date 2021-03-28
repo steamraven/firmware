@@ -7,6 +7,8 @@
 #include "usb_descriptors/usb_descriptor_strings.h"
 #include "bus_pal_hardware.h"
 #include "bootloader/wormhole.h"
+#include "ledmap.h"
+#include "led_display.h"
 
 usb_composite_device_t UsbCompositeDevice;
 static usb_status_t usbDeviceCallback(usb_device_handle handle, uint32_t event, void *param);
@@ -168,12 +170,11 @@ static volatile bool wakeUpHostAllowed;
 
 static void suspendUhk(void) {
     SleepModeActive = true;
-    LedSlaveDriver_DisableLeds();
 }
 
 static void wakeUpUhk(void) {
     SleepModeActive = false;
-    LedSlaveDriver_UpdateLeds();
+    ResetLeds = true;
 }
 
 void WakeUpHost(void) {

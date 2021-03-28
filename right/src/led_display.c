@@ -3,6 +3,7 @@
 #include "layer.h"
 #include "keymap.h"
 #include "device.h"
+#include "layer_switcher.h"
 
 uint8_t IconsAndLayerTextsBrightness = 0xff;
 uint8_t AlphanumericSegmentsBrightness = 0xff;
@@ -189,6 +190,7 @@ void LedDisplay_UpdateText(void)
 
 void LedDisplay_UpdateAll(void)
 {
+    LedDisplay_SetLayer(ActiveLayer);
     LedDisplay_UpdateIcons();
     LedDisplay_UpdateText();
 }
