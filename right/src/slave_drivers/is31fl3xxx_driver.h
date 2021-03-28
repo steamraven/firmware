@@ -51,6 +51,7 @@
         LedDriverPhase_UpdateData,
         LedDriverPhase_SetLedBrightness,
         LedDriverPhase_UpdateChangedLedValues,
+        LedDriverPhase_Sleep,
     } led_driver_phase_t;
 
     typedef struct {

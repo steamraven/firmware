@@ -290,9 +290,13 @@ status_t LedSlaveDriver_Update(uint8_t ledDriverId)
             if (*ledIndex >= ledCount) {
                 *ledIndex = 0;
                 memcpy(currentLedDriverState->targetLedValues, ledValues, ledCount);
-                *ledDriverPhase = currentLedDriverState->ledDriverIc == LedDriverIc_IS31FL3199
-                    ? LedDriverPhase_SetLedBrightness
-                    : LedDriverPhase_UpdateChangedLedValues;
+                if (SleepModeActive) {
+                    *ledDriverPhase = LedDriverPhase_Sleep;
+                } else {
+                    *ledDriverPhase = currentLedDriverState->ledDriverIc == LedDriverIc_IS31FL3199
+                        ? LedDriverPhase_SetLedBrightness
+                        : LedDriverPhase_UpdateChangedLedValues;
+                }
             }
             break;
         case LedDriverPhase_SetLedBrightness:
@@ -300,6 +304,13 @@ status_t LedSlaveDriver_Update(uint8_t ledDriverId)
             *ledDriverPhase = LedDriverPhase_UpdateChangedLedValues;
             break;
         case LedDriverPhase_UpdateChangedLedValues: {
+            if (SleepModeActive) {
+                memset(ledValues, 0, currentLedDriverState->ledCount);
+                *ledIndex = 0;
+                *ledDriverPhase = LedDriverPhase_InitLedValues;
+                status = kStatus_Uhk_IdleCycle;
+                break;
+            }
             uint8_t *targetLedValues = currentLedDriverState->targetLedValues;
 
             uint8_t lastLedChunkStartIndex = ledCount - PMW_REGISTER_UPDATE_CHUNK_SIZE;
@@ -349,6 +360,14 @@ status_t LedSlaveDriver_Update(uint8_t ledDriverId)
         case LedDriverPhase_UpdateData:
             status = I2cAsyncWrite(ledDriverAddress, updateDataBuffer, sizeof(updateDataBuffer));
             *ledDriverPhase = LedDriverPhase_UpdateChangedLedValues;
+            break;
+        case LedDriverPhase_Sleep:
+            // Must update ledValues before resuming
+            if (!SleepModeActive) {
+                *ledIndex = 0;
+                *ledDriverPhase = LedDriverPhase_InitLedValues;
+                status = kStatus_Uhk_IdleCycle;
+            }
             break;
     }
 
