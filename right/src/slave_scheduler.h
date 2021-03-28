@@ -56,5 +56,5 @@
 // Functions:
 
     void InitSlaveScheduler(void);
-
+    void UpdateSlaveScheduler(void);
 #endif

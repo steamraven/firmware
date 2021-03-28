@@ -14,6 +14,8 @@ uint32_t I2cSlaveScheduler_Counter;
 
 static uint8_t previousSlaveId;
 static uint8_t currentSlaveId;
+volatile static bool slaveReady;
+static uint32_t previousStatus;
 
 uhk_slave_t Slaves[] = {
     {
@@ -62,8 +64,19 @@ uhk_slave_t Slaves[] = {
     },
 };
 
-static void slaveSchedulerCallback(I2C_Type *base, i2c_master_handle_t *handle, status_t previousStatus, void *userData)
+static void slaveSchedulerCallback(I2C_Type *base, i2c_master_handle_t *handle, status_t prevStatus, void *userData)
 {
+    previousStatus = prevStatus;
+    slaveReady = true;
+}
+
+void UpdateSlaveScheduler() 
+{
+    if (!slaveReady) {
+        return;
+    }
+    slaveReady = false;
+
     bool isFirstCycle = true;
     bool isTransferScheduled = false;
     I2cSlaveScheduler_Counter++;
@@ -120,5 +133,6 @@ void InitSlaveScheduler(void)
     I2C_MasterTransferCreateHandle(I2C_MAIN_BUS_BASEADDR, &I2cMasterHandle, slaveSchedulerCallback, NULL);
 
     // Kickstart the scheduler by triggering the first transfer.
-    slaveSchedulerCallback(I2C_MAIN_BUS_BASEADDR, &I2cMasterHandle, kStatus_Fail, NULL);
+    previousStatus = kStatus_Fail;
+    slaveReady = true;
 }

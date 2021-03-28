@@ -54,6 +54,7 @@ int main(void)
             KeyMatrix_ScanRow(&RightKeyMatrix);
             ++MatrixScanCounter;
             UpdateUsbReports();
+            UpdateSlaveScheduler();
             __WFI();
         }
     }
