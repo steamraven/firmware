@@ -5,8 +5,6 @@
 #include "usb_interfaces/usb_interface_mouse.h"
 #include "keymap.h"
 #include "peripherals/test_led.h"
-#include "slave_drivers/is31fl3xxx_driver.h"
-#include "slave_drivers/uhk_module_driver.h"
 #include "macros.h"
 #include "key_states.h"
 #include "right_key_matrix.h"
