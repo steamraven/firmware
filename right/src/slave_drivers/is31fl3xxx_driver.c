@@ -170,12 +170,6 @@ static uint8_t updateDataBuffer[] = {0x10, 0x00};
 static uint8_t setLedBrightness[] = {0x04, 0b00110000};
 static uint8_t updatePwmRegistersBuffer[PWM_REGISTER_BUFFER_LENGTH];
 
-void LedSlaveDriver_DisableLeds(void)
-{
-    for (uint8_t ledDriverId=0; ledDriverId<=LedDriverId_Last; ledDriverId++) {
-        memset(LedDriverValues[ledDriverId], 0, ledDriverStates[ledDriverId].ledCount);
-    }
-}
 
 void LedSlaveDriver_UpdateLeds(void)
 {

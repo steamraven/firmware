@@ -75,7 +75,6 @@
 
 // Functions:
 
-    void LedSlaveDriver_DisableLeds(void);
     void LedSlaveDriver_UpdateLeds(void);
     void LedSlaveDriver_Init(uint8_t ledDriverId);
     status_t LedSlaveDriver_Update(uint8_t ledDriverId);
