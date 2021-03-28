@@ -81,7 +81,7 @@ void UpdateSlaveScheduler()
     bool isTransferScheduled = false;
     I2cSlaveScheduler_Counter++;
 
-    do {
+    for (uint8_t count; count < SLAVE_COUNT && !isTransferScheduled; ) {
         uhk_slave_t *currentSlave = Slaves + currentSlaveId;
 
         if (isFirstCycle) {
@@ -112,12 +112,12 @@ void UpdateSlaveScheduler()
 
         if (currentStatus != kStatus_Uhk_IdleCycle) {
             previousSlaveId = currentSlaveId++;
+            count++;
             if (currentSlaveId >= SLAVE_COUNT) {
                 currentSlaveId = 0;
             }
         }
-
-    } while (!isTransferScheduled);
+    } 
 }
 
 void InitSlaveScheduler(void)
