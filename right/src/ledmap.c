@@ -5,7 +5,7 @@
 #include "slave_drivers/is31fl3xxx_driver.h"
 #include "device.h"
 
-bool ResetLeds = true;
+volatile bool ResetLeds = true;
 
 rgb_t KeyActionColors[] = {
     {.red=0, .green=0, .blue=0}, // KeyActionColor_None
