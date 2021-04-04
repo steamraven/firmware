@@ -316,16 +316,10 @@ status_t LedSlaveDriver_Update(uint8_t ledDriverId)
                 }
             }
 
-            bool foundStartIndex = count < ledCount;
-            if (!foundStartIndex && currentLedDriverState->ledDriverIc != LedDriverIc_IS31FL3199) {
-                *ledIndex = 0;
-                break;
-            }
+            uint8_t maxEndLedIndex = MIN(ledCount-1, startLedIndex+PMW_REGISTER_UPDATE_CHUNK_SIZE);
+            uint8_t endLedIndex = MIN(ledCount - 1, startLedIndex+PMW_REGISTER_UPDATE_MIN_SIZE);
 
-            uint8_t maxChunkSize = MIN(ledCount - startLedIndex, PMW_REGISTER_UPDATE_CHUNK_SIZE);
-            uint8_t maxEndLedIndex = startLedIndex + maxChunkSize - 1;
-            uint8_t endLedIndex = startLedIndex;
-            for (uint8_t index=startLedIndex; index<=maxEndLedIndex; index++) {
+            for (uint8_t index=endLedIndex; index<=maxEndLedIndex; index++) {
                 if (ledValues[index] != targetLedValues[index]) {
                     endLedIndex = index;
                 }
